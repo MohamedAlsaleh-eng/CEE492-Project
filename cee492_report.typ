@@ -8,7 +8,7 @@
   authors: (
     (
       name: "Mohamed Alsaleh",
-      department: [Department of Civil and Environmental Engineering],
+      department: [Civil Engineering Department],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "alsaleh4@illinois.edu",
@@ -22,11 +22,18 @@
     ),
     (
       name: "Khwanjira Phumphid",
-      department: [Dep],
+      department: [Department of Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "kp70@illinois.edu",
-    )
+    ),
+     (
+      name: "Rae Zhu",
+      department: [Department of Civil and Environmental Engineering],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "rzhu15@illinois.edu",
+     )
   ),
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
