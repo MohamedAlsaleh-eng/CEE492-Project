@@ -7,19 +7,26 @@
   ],
   authors: (
     (
-      name: "Author 1",
-      department: [Department 1],
+      name: "Mohamed Alsaleh",
+      department: [Department of Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "author1@illinois.edu",
+      email: "alsaleh4@illinois.edu",
     ),
     (
-      name: "Author 2",
-      department: [Department 2],
+      name: "Jingchun Wang",
+      department: [Department of Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
-      email: "author2@illinois.edu",
+      email: "jw198@illinois.edu",
     ),
+    (
+      name: "Khwanjira Phumphid",
+      department: [Dep],
+      organization: [University of Illinois Urbana-Champaign],
+      location: [Urbana, IL, USA],
+      email: "kp70@illinois.edu",
+    )
   ),
   index-terms: ("Optional", "Keywords", "Here"),
   bibliography: bibliography("refs.bib"),
