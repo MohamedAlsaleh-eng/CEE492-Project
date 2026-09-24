@@ -1,9 +1,10 @@
+
 #import "@preview/charged-ieee:0.1.4": ieee
 
 #show: ieee.with(
-  title: [Report Template],
+  title: [Prediction of Concrete Compressive Strength Using Concrete Mixture Characteristics],
   abstract: [
-    This is where you put your abstract. Abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract abstract.
+    This project aims to investigate the relationships between concrete mixture characteristics, age, and compressive strength using exploratory data analysis and predictive modeling. Multiple statistical and machine-learning approaches will be evaluated to estimate concrete compressive strength and identify influential mixture characteristics. The findings are expected to provide insights into concrete strength development and inform future mixture design adjustments.
   ],
   authors: (
     (
@@ -27,78 +28,99 @@
       location: [Urbana, IL, USA],
       email: "kp70@illinois.edu",
     ),
-     (
+    (
       name: "Rae Zhu",
       department: [Department of Civil and Environmental Engineering],
       organization: [University of Illinois Urbana-Champaign],
       location: [Urbana, IL, USA],
       email: "rzhu15@illinois.edu",
-     )
+    ),
   ),
-  index-terms: ("Optional", "Keywords", "Here"),
+  index-terms: ("Concrete Compressive Strength", "Machine Learning", "Regression", "Feature Importance"),
   bibliography: bibliography("refs.bib"),
 )
 
-= First Section
+= Dataset Description
 
-To add citations to the report, go to #link("https://scholar.google.com"), search for a paper, click on the quotation mark icon below the search result, and copy the BibTeX entry. Then paste it into the `refs.bib` file. You can cite papers using the `@` symbol followed by the citation key, e.g., @lowry1951protein.
+== Dataset Source and Overview
 
-Other options to get BibTeX entries for your references include #link("https://www.bibtex.com/converters/") and asking an LLM to generate the a BibTeX entry for you. (If you use an LLM, make sure to verify the generated BibTeX entry for correctness.)
+This project will use the Concrete Compressive Strength dataset available through the UCI Machine Learning Repository @yeh1998dataset. The dataset was originally provided by Prof. I-Cheng Yeh of Chung-Hua University. The data were developed from laboratory measurements of concrete mixtures, where the actual compressive strength of each mixture was determined at a specified age. The dataset is provided in raw, unscaled form and is available as an Excel file (Concrete_Data.xls).
 
-More information about citations can be found in the Typst documentation: #link("https://typst.app/docs/reference/model/cite").
+Dataset source: #link("https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength")[UCI Machine Learning Repository, Concrete Compressive Strength Dataset]
 
-== First Subsection
+DOI: #link("https://doi.org/10.24432/C5PK67")[10.24432/C5PK67]
 
-To add figures to your report, save the image file in the `figures` folder and use the `#figure` command as shown below to include it in your document. You can specify the width of the image and add a caption. Then you can reference the figure like this: @proofread.
+The dataset contains 1,030 observations and nine quantitative variables. Eight variables describe the concrete mixture composition and age and are used as input variables. The ninth variable, concrete compressive strength, is the output variable. The dataset contains no missing values.
 
-#figure(
-  image("figures/proof-read.png", width: 80%),
-  caption: [A humble request. (Copyright: University of the Fraser Valley.)],
-) <proofread>
+== Dataset Variables
 
-=== First Subsubsection
-
-You can make sub, sub-sub, and sub-sub-sub sections by adding `=` signs in front of the section title. There needs to be a space between the last `=` sign and the title text.
-
-= Second Section
-
-You can add tables using the `#table` command. Here is an example table:
+The variables included in the dataset are summarized in Table @tab:variables.
 
 #figure(
-  caption: [Example Table],
   table(
-    columns: (auto, auto, auto),
-    table.header([*Column 1*], [*Column 2*], [*Column 3*]),
-    "Row 1", "Data 1", [Data 2],
-    image("figures/proof-read.png", width: 40%), "Data 3", "Data 4",
+    columns: (2fr, 1fr, 3fr, 1fr),
+    inset: 3pt,
+    align: (left, center, left, center),
+
+    table.header(
+      [*Variable*],
+      [*Unit*],
+      [*Description*],
+      [*Role*],
+    ),
+
+    [Cement],
+    [kg/m³],
+    [Amount of cement in the concrete mixture],
+    [Input],
+
+    [Blast Furnace Slag],
+    [kg/m³],
+    [Amount of blast furnace slag in the mixture],
+    [Input],
+
+    [Fly Ash],
+    [kg/m³],
+    [Amount of fly ash in the mixture],
+    [Input],
+
+    [Water],
+    [kg/m³],
+    [Amount of water in the mixture],
+    [Input],
+
+    [Superplasticizer],
+    [kg/m³],
+    [Amount of superplasticizer in the mixture],
+    [Input],
+
+    [Coarse Aggregate],
+    [kg/m³],
+    [Amount of coarse aggregate in the mixture],
+    [Input],
+
+    [Fine Aggregate],
+    [kg/m³],
+    [Amount of fine aggregate in the mixture],
+    [Input],
+
+    [Age],
+    [days],
+    [Age of the concrete specimen at testing],
+    [Input],
+
+    [Concrete Compressive Strength],
+    [MPa],
+    [Measured compressive strength of the concrete],
+    [Output],
   ),
-) <table-example>
+  caption: [Description of dataset variables.],
+) <tab:variables>
 
-You can reference the table like this: @table-example.
+Therefore, the primary response variable for this project will be concrete compressive strength in MPa, while the remaining eight variables will be considered potential predictors.
 
-== Various Text Formatting Options
+= Proposed Analysis
 
-You can make text _italic_ by surrounding it with `_` symbols, *bold* by surrounding it with `*` symbols, and _*bold italic*_ by combining both. You can format `inline code snippets` by surrounding them with backtick (\`) characters.
+The objective of this project is to investigate the relationships between concrete mixture characteristics, age, and compressive strength and to develop predictive models for concrete compressive strength. The first stage of the analysis will consist of exploratory data analysis to examine the distributions of the variables and identify relationships between the mixture components, age, and compressive strength. Appropriate graphical and statistical methods will be used to explore these relationships, while feature importance analysis will help identify the mixture characteristics most strongly associated with concrete compressive strength.
 
-You can create bullet point lists using `-` symbols:
-- Bullet point 1
-- Bullet point 2
-  - Sub bullet point 1
-  - Sub bullet point 2
-
-
-You can create numbered lists using numbers followed by a period (or using `+` symbols, which number the items for you):
-1. First item
-2. Second item
-  1. Sub item 1
-  2. Sub item 2
-
-
-
-== Equations
-
-You can create equations using `$` symbols. For example, you can make an inline equation like this $E=m c^2$ or a displayed equation like this:
-
-$ x < y => x gt.eq.not y $ <eq1>
-
-You can reference the equation like this: Eq. @eq1.
+The second stage of the project will use multiple predictive modeling approaches introduced in the course. These may include statistical regression methods and machine-learning models, as appropriate based on the methods covered during the semester. The models will be developed using the eight input variables and evaluated using appropriate prediction-performance measures. Their predictive capabilities will then be compared to determine how different statistical and machine-learning approaches perform for estimating concrete compressive strength. This analysis is useful because compressive strength is an important indicator of concrete performance, while strength development depends on several interacting mixture characteristics and the age of the concrete. Comparing multiple predictive approaches can also provide insight into whether more flexible machine-learning methods offer improved prediction compared with conventional statistical regression models. Furthermore, identifying the most influential mixture characteristics can provide insights into the factors associated with concrete strength and help guide future mixture design adjustments to improve concrete performance.
