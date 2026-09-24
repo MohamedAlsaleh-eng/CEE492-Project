@@ -40,19 +40,19 @@
   bibliography: bibliography("refs.bib"),
 )
 
-= Dataset Description
+= *Dataset Description*
 
-== Dataset Source and Overview
+== *Dataset Source and Overview*
 
 This project will use the Concrete Compressive Strength dataset available through the UCI Machine Learning Repository @yeh1998dataset. The dataset was originally provided by Prof. I-Cheng Yeh of Chung-Hua University. The data were developed from laboratory measurements of concrete mixtures, where the actual compressive strength of each mixture was determined at a specified age. The dataset is provided in raw, unscaled form and is available as an Excel file (Concrete_Data.xls).
 
-Dataset source: #link("https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength")[UCI Machine Learning Repository, Concrete Compressive Strength Dataset]
+Dataset source: #link("https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength")[UCI Machine Learning Repository, _Concrete Compressive Strength_ dataset]
 
 DOI: #link("https://doi.org/10.24432/C5PK67")[10.24432/C5PK67]
 
 The dataset contains 1,030 observations and nine quantitative variables. Eight variables describe the concrete mixture composition and age and are used as input variables. The ninth variable, concrete compressive strength, is the output variable. The dataset contains no missing values.
 
-== Dataset Variables
+== *Dataset Variables*
 
 The variables included in the dataset are summarized in Table @tab:variables.
 
@@ -70,37 +70,37 @@ The variables included in the dataset are summarized in Table @tab:variables.
     ),
 
     [Cement],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of cement in the concrete mixture],
     [Input],
 
     [Blast Furnace Slag],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of blast furnace slag in the mixture],
     [Input],
 
     [Fly Ash],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of fly ash in the mixture],
     [Input],
 
     [Water],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of water in the mixture],
     [Input],
 
     [Superplasticizer],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of superplasticizer in the mixture],
     [Input],
 
     [Coarse Aggregate],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of coarse aggregate in the mixture],
     [Input],
 
     [Fine Aggregate],
-    [kg/m³],
+    [kg/m#super[3]],
     [Amount of fine aggregate in the mixture],
     [Input],
 
@@ -117,9 +117,9 @@ The variables included in the dataset are summarized in Table @tab:variables.
   caption: [Description of dataset variables.],
 ) <tab:variables>
 
-Therefore, the primary response variable for this project will be concrete compressive strength in MPa, while the remaining eight variables will be considered potential predictors.
+Therefore, the primary response variable for this project will be *concrete compressive strength in MPa*, while the remaining eight variables will be considered potential predictors.
 
-= Proposed Analysis
+= *Proposed Analysis*
 
 The objective of this project is to investigate the relationships between concrete mixture characteristics, age, and compressive strength and to develop predictive models for concrete compressive strength. The first stage of the analysis will consist of exploratory data analysis to examine the distributions of the variables and identify relationships between the mixture components, age, and compressive strength. Appropriate graphical and statistical methods will be used to explore these relationships, while feature importance analysis will help identify the mixture characteristics most strongly associated with concrete compressive strength.
 
