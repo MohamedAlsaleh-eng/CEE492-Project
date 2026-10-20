@@ -124,31 +124,31 @@ Therefore, the primary response variable for this project will be *concrete comp
 [please add description] (@fig:raincloud, @fig:corner, @fig:ternary, @fig:wb, @fig:development)
 
 #figure(
-  image("figures/eda/fig1_raincloud_age.pdf", width: 100%),
+  image("figures/eda/fig1_raincloud_age.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [[please add description]],
 ) <fig:raincloud>
 
 #figure(
-  image("figures/eda/fig2_corner.pdf", width: 100%),
+  image("figures/eda/fig2_corner.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [[please add description]],
 ) <fig:corner>
 
 #figure(
-  image("figures/eda/fig3_ternary_binder.pdf", width: 100%),
+  image("figures/eda/fig3_ternary_binder.png", width: 100%),
   caption: [[please add description]],
 ) <fig:ternary>
 
 #figure(
-  image("figures/eda/fig4_wb_joint.pdf", width: 100%),
+  image("figures/eda/fig4_wb_joint.png", width: 100%),
   caption: [[please add description]],
 ) <fig:wb>
 
 #figure(
-  image("figures/eda/fig5_strength_development.pdf", width: 100%),
+  image("figures/eda/fig5_strength_development.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [[please add description]],
