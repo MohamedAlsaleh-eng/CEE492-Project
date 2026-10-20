@@ -119,6 +119,41 @@ The variables included in the dataset are summarized in Table @tab:variables.
 
 Therefore, the primary response variable for this project will be *concrete compressive strength in MPa*, while the remaining eight variables will be considered potential predictors.
 
+== *Exploratory Data Analysis*
+
+[please add description] (@fig:raincloud, @fig:corner, @fig:ternary, @fig:wb, @fig:development)
+
+#figure(
+  image("figures/eda/fig1_raincloud_age.pdf", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [[please add description]],
+) <fig:raincloud>
+
+#figure(
+  image("figures/eda/fig2_corner.pdf", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [[please add description]],
+) <fig:corner>
+
+#figure(
+  image("figures/eda/fig3_ternary_binder.pdf", width: 100%),
+  caption: [[please add description]],
+) <fig:ternary>
+
+#figure(
+  image("figures/eda/fig4_wb_joint.pdf", width: 100%),
+  caption: [[please add description]],
+) <fig:wb>
+
+#figure(
+  image("figures/eda/fig5_strength_development.pdf", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [[please add description]],
+) <fig:development>
+
 = *Proposed Analysis*
 
 The objective of this project is to investigate the relationships among concrete mixture characteristics, age, and compressive strength and to develop predictive models for concrete compressive strength. The first stage of the analysis will use exploratory data analysis to examine the variable distributions and relationships among the mixture components, age, and compressive strength. Appropriate graphical and statistical methods will be used to explore these relationships, while feature importance analysis will help identify which mixture characteristics are most strongly associated with compressive strength.
