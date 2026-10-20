@@ -1,0 +1,31 @@
+Figure 5 - Strength development of individual concrete mixtures
+File: fig5_strength_development.png
+
+BACKGROUND
+The 1,030 specimens come from 428 unique mixtures, and many mixtures were tested at
+several ages. This figure follows the same mixture over time, which removes the
+mixture-to-mixture differences that affect Figure 1.
+
+PANEL (a) - one line per mixture
+- Only mixtures tested at 3 or more ages are drawn (140 mixtures).
+- x-axis: age (days, log scale). y-axis: compressive strength (MPa).
+- Each line connects one mixture's strengths at its test ages.
+- Line colour = that mixture's water-to-binder ratio (yellow = low w/b,
+  purple = high w/b).
+- What to look for: the lines are layered by colour, with low-w/b (yellow) mixtures on
+  top. Every line rises steeply at first and then flattens; most of the gain happens
+  before 28 days.
+
+PANEL (b) - strength relative to the same mixture's 28-day strength
+- For every mixture that has a 28-day result, each strength is divided by that
+  mixture's own 28-day strength. All mixtures therefore pass through 1.0 at 28 days
+  (where the dashed lines cross).
+- Dark blue line: median ratio across mixtures.
+  Darker band: 25th-75th percentile. Lighter band: 10th-90th percentile.
+- Numbers along the top (row "n"): number of mixtures used at each age.
+- Ages marked * are pooled: "90*" combines 90, 91 and 100 days; "365*" combines 360
+  and 365 days.
+- Typical values (median): 3 days ~ 0.46, 7 days ~ 0.63, 14 days ~ 0.82,
+  56 days ~ 1.15, 90-100 days ~ 1.25. In other words, a mixture typically reaches about
+  two thirds of its 28-day strength at 7 days.
+- A wider band means mixtures differ more in how fast they gain strength.

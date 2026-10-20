@@ -1,0 +1,12 @@
+Figure 4 - Compressive strength versus water-to-binder ratio by specimen age (joint plot)
+File: fig4_wb_joint.png
+
+WHAT IS PLOTTED
+- x-axis: water-to-binder ratio, w/b = water / (cement + slag + fly ash). This is a
+  derived variable computed from the dataset columns.
+- y-axis: compressive strength (MPa).
+- One dot per specimen, all 1,030 specimens.
+- Dot colour = specimen age on a log colour scale (purple = early, about 1-7 days;
+  orange to yellow = late, 90-365 days). See the colour bar at top right.
+- Grey histogram on top: distribution of w/b.
+  Grey histogram on the right: distribution of strength.

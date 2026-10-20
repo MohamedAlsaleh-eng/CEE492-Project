@@ -1,0 +1,18 @@
+Figure 1 - Distribution of compressive strength by specimen age (raincloud plot)
+File: fig1_raincloud_age.png
+
+WHAT IS PLOTTED
+- x-axis: the 14 test ages in the dataset (days). The ages are shown as categories,
+  evenly spaced, not on a time scale.
+- y-axis: compressive strength (MPa).
+- Numbers along the top: number of specimens (n) tested at each age.
+
+HOW TO READ EACH AGE GROUP
+Each age has three parts, from left to right:
+1. Cloud (half violin): a kernel density estimate of the strength values. Wider means
+   more specimens near that strength. Drawn only when n >= 10.
+2. Box: the box spans Q1 to Q3 (the middle 50% of specimens), the thick line is the
+   median, and the whiskers reach the most extreme values within 1.5 x IQR. Drawn
+   when n >= 5.
+3. Dots: one dot per specimen. They are spread sideways at random only so they do not
+   overlap; horizontal position inside a group has no meaning.

@@ -121,37 +121,39 @@ Therefore, the primary response variable for this project will be *concrete comp
 
 == *Exploratory Data Analysis*
 
-[please add description] (@fig:raincloud, @fig:corner, @fig:ternary, @fig:wb, @fig:development)
+[please add description]
+
+[A reading guide and explanation for each figure is provided as a text file with the same name in the `figures/eda/` folder of the project repository.]
 
 #figure(
   image("figures/eda/fig1_raincloud_age.png", width: 100%),
   placement: auto,
   scope: "parent",
-  caption: [[please add description]],
+  caption: [Distribution of compressive strength by specimen age.],
 ) <fig:raincloud>
 
 #figure(
   image("figures/eda/fig2_corner.png", width: 100%),
   placement: auto,
   scope: "parent",
-  caption: [[please add description]],
+  caption: [Pairwise relationships and Spearman rank correlations among mixture variables, age, and compressive strength.],
 ) <fig:corner>
 
 #figure(
   image("figures/eda/fig3_ternary_binder.png", width: 100%),
-  caption: [[please add description]],
+  caption: [Binder composition and 28-day compressive strength.],
 ) <fig:ternary>
 
 #figure(
   image("figures/eda/fig4_wb_joint.png", width: 100%),
-  caption: [[please add description]],
+  caption: [Compressive strength versus water-to-binder ratio by specimen age.],
 ) <fig:wb>
 
 #figure(
   image("figures/eda/fig5_strength_development.png", width: 100%),
   placement: auto,
   scope: "parent",
-  caption: [[please add description]],
+  caption: [Strength development of individual concrete mixtures.],
 ) <fig:development>
 
 = *Proposed Analysis*

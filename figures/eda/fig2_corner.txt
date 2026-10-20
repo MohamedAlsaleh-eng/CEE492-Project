@@ -1,0 +1,44 @@
+Figure 2 - Pairwise relationships and Spearman rank correlations (corner plot)
+File: fig2_corner.png
+
+LAYOUT
+A 7 x 7 grid. Rows and columns are the same seven variables, in the same order:
+Cement, Slag, Fly ash, Water, Superplasticizer, Age, Strength.
+The cell in row i, column j shows the relationship between the row variable and the
+column variable. Coarse and fine aggregate are left out to keep the grid readable.
+
+DIAGONAL - histograms
+- Each diagonal cell is the distribution of one variable.
+- The tall bar at 0 for slag, fly ash and superplasticizer means many mixtures contain
+  none of that material (45%, 55% and 37% of specimens respectively).
+- Age is on a log axis; the spike is the 28-day group.
+
+LOWER TRIANGLE - scatter plots
+- One dot per specimen (1,030 in total). x is the column variable, y is the row
+  variable. Age uses a log axis.
+- Dot colour = compressive strength (yellow = high, purple = low; right-hand colour bar).
+- The bottom row (Strength vs each variable) is the most direct view of how each input
+  relates to strength.
+- Dots lining up in straight lines are not an error: the data comes from designed
+  mixture series (for example, replacing cement with slag at fixed proportions), not
+  from random sampling.
+
+UPPER TRIANGLE - Spearman rank correlation
+- The number is Spearman's rho for that pair of variables (row x column).
+- Colour: red = positive, blue = negative; darker = stronger. Bold numbers have
+  |rho| >= 0.3.
+- Stars give significance: * p < 0.05, ** p < 0.01, *** p < 0.001.
+- Strongest correlations with strength: Age (0.60) and Cement (0.48).
+- Strongest correlation between inputs: Water and Superplasticizer (-0.69).
+
+WHAT SPEARMAN RHO MEANS
+- Each variable is replaced by its rank (smallest = 1, next = 2, ...), and the ordinary
+  Pearson correlation of the ranks is computed.
+- It measures a monotonic relationship (does Y tend to rise when X rises?), not a
+  straight-line one. +1 = perfectly increasing, 0 = no monotonic trend,
+  -1 = perfectly decreasing.
+- It was used here because age is strongly skewed and several variables have many
+  zeros. Ranks are not affected by extreme values or by transforms such as log(age).
+- Example: Age vs Strength has Pearson r = 0.33 but Spearman rho = 0.60. Strength rises
+  steadily with age but along a curve, so a straight-line measure understates the
+  relationship.

@@ -1,0 +1,20 @@
+Figure 3 - Binder composition and 28-day compressive strength (ternary diagram)
+File: fig3_ternary_binder.png
+
+WHAT IS PLOTTED
+- Only the 425 specimens tested at 28 days, so that age does not affect the comparison.
+- Each dot is one specimen. Its position gives the composition of its binder
+  (cement + slag + fly ash) as mass shares that add up to 100%.
+- Dot colour = 28-day compressive strength (colour bar on the right; yellow = high,
+  purple = low).
+
+HOW TO READ A TERNARY DIAGRAM
+- The three corners are 100% cement (bottom left), 100% fly ash (bottom right) and
+  100% slag (top).
+- The closer a dot is to a corner, the larger the share of that material.
+- Dots on the bottom edge contain no slag (cement + fly ash only).
+  Dots on the left edge contain no fly ash (cement + slag only).
+  Dots exactly at the bottom-left corner are Portland cement only.
+  Dots inside the triangle contain all three materials.
+- To read a share, follow the grid lines to the tick labels:
+  bottom edge = fly ash %, right edge = slag %, left edge = cement %.
