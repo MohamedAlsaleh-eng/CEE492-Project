@@ -125,12 +125,20 @@ Therefore, the primary response variable for this project will be *concrete comp
 
 [A reading guide and explanation for each figure is provided as a text file with the same name in the `figures/eda/` folder of the project repository.]
 
+@fig:raincloud shows the distribution of compressive strength of concrete in different ages. Overall, the median value of compressive strength increases with age, especially during the early stage.The median compressive strength increased from around 16 MPa at 3 days to 34 MPa at 28 days, and continue to increase to 52 MPa at 56 days. However, the compressive strength varies within each age group. This variability suggests that curing age is not sufficient to be the only variable to explain concrete strength. 
+
+In addition, the strength distributions across the different age groups do not necessarily show a consistent upward trend.This does not always indicate the concrete loses strength over time, as the mix designs used for specimens at different ages may vary.The sample sizes are not consistent either: 425 specimens were tested at 28 days, while only 22 were tested at 91 days. Therefore, comparisons between different ages may not be entirely valid, and predictive models should consider this uneven distribution of specimen ages.
+
 #figure(
   image("figures/eda/fig1_raincloud_age.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [Distribution of compressive strength by specimen age.],
 ) <fig:raincloud>
+
+@fig:corner shows the pairwise relationships and Spearman’s rank correlation coefficients among the selected variables. The age of the test specimens showed the strongest positive correlation with compressive strength (ρ=0.60), followed by cement content (ρ=0.48) and high-performance water-reducing agent content (ρ=0.35). Water content showed a negative correlation with strength (ρ=-0.31). 
+
+Meanwhile, these relationships are not necessarily linear. For example, the relationship between age and strength is described more accurately by the Spearman correlation coefficient (ρ = 0.60) than by the Pearson correlation coefficient (r = 0.33), indicating a monotonically increasing but nonlinear relationship.
 
 #figure(
   image("figures/eda/fig2_corner.png", width: 100%),
@@ -139,22 +147,34 @@ Therefore, the primary response variable for this project will be *concrete comp
   caption: [Pairwise relationships and Spearman rank correlations among mixture variables, age, and compressive strength.],
 ) <fig:corner>
 
+@fig:ternary uses a ternary diagram to determine the relationship between binder proportions and 28-day compressive strength. Some mixtures with higher cement content achieved relatively higher strength, while those containing admixtures exhibited more variability. However, high compressive strength is not limited to cement-dominated mixtures. Replacing part of the cement with blast furnace slag or fly ash does not necessarily result in reduced strength, the outcome may depend on proportions and other mixture characteristics.
+
 #figure(
   image("figures/eda/fig3_ternary_binder.png", width: 100%),
   caption: [Binder composition and 28-day compressive strength.],
 ) <fig:ternary>
+
+@fig:wb illustrates the relationship between the water-cement ratio and the compressive strength of concrete, the age of the test specimens are indicated by color. A clear negative correlation can be observed as mixtures with lower water-cement ratios typically achieve higher compressive strengths. This relationship is consistent with the role of water in cement-based materials. Although water is essential for cement hydration, excessive amount of water can lead to increasing porosity of the hardened material, which may reduce compressive strength. 
+
+However, differences still exist among specimens with similar water-to-binder ratios. The color distribution indicates that specimens tested at later ages generally show higher strength than those tested at earlier ages with comparable water-to-cement ratios. 
 
 #figure(
   image("figures/eda/fig4_wb_joint.png", width: 100%),
   caption: [Compressive strength versus water-to-binder ratio by specimen age.],
 ) <fig:wb>
 
+@fig:development provides a more detailed analysis of strength development by tracking the change in strength over time for different concrete mixtures.Unlike @fig:raincloud, @fig:development examines measurement data for the same mix design at multiple ages.
+The strength of most mixtures increases rapidly during the early curing period, and the rate slows down later. Mixtures with lower water-to-cement ratios usually can achieve higher compressive strengths.
+
+@fig:development (b) further quantifies the relationship by normalizing the strength of each mixture relative to 28-day strength.The median strength rise from ~0.46 at day 3 to 0.63 at day 7, and further to 0.82 at day 14. By day 56, the median reached 1.15, continue increasing to 1.25 between days 90 and 100. 
 #figure(
   image("figures/eda/fig5_strength_development.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [Strength development of individual concrete mixtures.],
 ) <fig:development>
+
+Based on exploratory data analysis, the compressive strength of concrete depends on multiple factors rather than any single mix design characteristic. The age of the test specimens and the cement content are positively correlated with strength, while the water content and the water-to-binder ratio are negatively correlated.
 
 = *Proposed Analysis*
 
