@@ -37,7 +37,27 @@
     ),
   ),
   index-terms: ("Concrete Compressive Strength", "Machine Learning", "Regression", "Feature Importance"),
-  bibliography: bibliography("refs.bib"),
+  bibliography: bibliography(bytes(
+    read("refs.bib") + "\n\n" +
+    "@article{breiman2001,\n" +
+    "  author = {Breiman, Leo},\n" +
+    "  title = {Random Forests},\n" +
+    "  journal = {Machine Learning},\n" +
+    "  year = {2001},\n" +
+    "  volume = {45},\n" +
+    "  pages = {5--32},\n" +
+    "  doi = {10.1023/A:1010933404324}\n" +
+    "}\n" +
+    "\n" +
+    "@inproceedings{lundberg2017,\n" +
+    "  author = {Lundberg, Scott M. and Lee, Su-In},\n" +
+    "  title = {A Unified Approach to Interpreting Model Predictions},\n" +
+    "  booktitle = {Advances in Neural Information Processing Systems},\n" +
+    "  year = {2017},\n" +
+    "  volume = {30},\n" +
+    "  pages = {4765--4774}\n" +
+    "}\n"
+  )),
 )
 
 = *Dataset Description*
@@ -181,3 +201,25 @@ Based on exploratory data analysis, the compressive strength of concrete depends
 The objective of this project is to investigate the relationships among concrete mixture characteristics, age, and compressive strength and to develop predictive models for concrete compressive strength. The first stage of the analysis will use exploratory data analysis to examine the variable distributions and relationships among the mixture components, age, and compressive strength. Appropriate graphical and statistical methods will be used to explore these relationships, while feature importance analysis will help identify which mixture characteristics are most strongly associated with compressive strength.
 
 The second stage of the project will apply multiple predictive modeling approaches introduced in the course. These may include statistical regression methods and machine-learning models, as appropriate based on the methods covered during the semester. The models will be developed using the eight input variables and evaluated using appropriate prediction-performance measures. Their predictive capabilities will then be compared to determine how different statistical and machine-learning approaches perform in estimating concrete compressive strength. This analysis is useful because compressive strength is an important indicator of concrete performance, while strength development depends on several interacting mixture characteristics and the age of the concrete. Comparing multiple predictive approaches can also provide insight into whether more flexible machine-learning methods offer improved predictive performance compared with conventional statistical regression models. Furthermore, identifying the most influential mixture characteristics can provide insights into the factors associated with concrete strength and help guide future mixture design adjustments to improve concrete performance.
+
+= *Predictive Modeling*
+
+We will compare four models for concrete compressive strength: multiple linear regression, polynomial regression with ridge regularization, a regression tree, and random forest (RF). All models will use the seven mixture ingredients and age to predict strength in MPa. The aim is to assess whether more flexible models improve predictions for mixtures absent from the training data. The resulting models could support preliminary mixture assessment within the conditions represented by the dataset.
+
+Multiple linear regression will provide the baseline. The polynomial model will include the eight original predictors, their squared terms, and pairwise interactions. A ridge penalty will limit coefficient size to reduce overfitting. The regression tree will divide observations through successive rules, while RF will average predictions from 500 trees built with random variation in observations and candidate predictors @breiman2001. All models will be implemented in Julia.
+
+The same data split will allocate approximately 80% of observations to training and 20% to testing. Records with identical quantities of the seven ingredients will stay together, including measurements at different ages. These mixture groups will be assigned intact, so the final percentages may differ slightly from 80/20. This approach will assess predictions for unseen recipes and prevent the same recipe from appearing in both sets. Repeated records will be reviewed before the split, and any corrections will apply to all models.
+
+The three tunable models will use grid search with 20 predefined parameter configurations each. Every configuration will be assessed through the same five validation folds within the training set, with mixture groups kept intact. The proposed grids are:
+
+- *Polynomial regression with ridge regularization:* 20 penalty values spaced evenly on a logarithmic scale from 0.0001 to 10,000.
+- *Regression tree:* maximum depths of 3, 5, 8, 12, or no depth limit, combined with minimum leaf sizes of 2, 5, 10, or 20 observations.
+- *RF:* maximum depths of 10 or no depth limit, minimum leaf sizes of 2 or 5 observations, and 2, 3, 4, 6, or 8 candidate predictors per split. The number of trees will remain fixed at 500.
+
+These grids provide the same number of candidate evaluations for each tunable model, although the parameters and their ranges differ by model. Ordinary linear regression has no comparable tuning parameter and will be evaluated on the same validation folds. Data partitions and random seeds will be recorded and reused.
+
+All models will use the same eight source predictors and untransformed strength values. Polynomial terms will be fixed before tuning. For the regression models, input columns will be standardized using means and standard deviations calculated from each training fold. The corresponding validation fold will receive the same transformation. Polynomial terms will be standardized after expansion. Trees will use unscaled inputs because their split rules do not require standardization. After tuning, scaling parameters will be recalculated from the full training set and applied unchanged to the test set.
+
+Mean validation root mean squared error (RMSE) will determine the settings for each model and the preferred model. All four models will then be fitted to the full training set and evaluated once on the same test observations. Test RMSE, mean absolute error (MAE), and $R^2$ will be reported, with RMSE and MAE expressed in MPa. Predicted-versus-observed and residual plots will show where errors occur. Test results will not guide further tuning or changes to preprocessing.
+
+SHapley Additive exPlanations (SHAP) will explain RF predictions @lundberg2017, with approximate Shapley values calculated through ShapML.jl. Training observations will provide the reference data, and explanations will cover test observations after model settings are fixed. Mean absolute SHAP values will rank predictor contributions. A summary plot and dependence plots for the leading predictors will show contributions to higher or lower predicted strength relative to the reference prediction. These results explain model behavior and do not establish causal effects. Correlated ingredients may affect how contributions are shared.
