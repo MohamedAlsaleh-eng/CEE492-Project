@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add cee492_report.pdf
+          git add -f cee492_report.pdf
           if ! git diff --cached --quiet; then
             git commit -m "Auto-update report PDF"
             git push
