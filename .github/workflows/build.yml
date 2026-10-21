@@ -1,22 +1,40 @@
+
 name: Render Report
+
 on:
   push:
+    branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   render-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      # charged-ieee typesets in TeX Gyre Termes/Cursor
+      - uses: actions/checkout@v4
+
       - run: sudo apt-get update && sudo apt-get install -y fonts-texgyre
+
       - uses: typst-community/setup-typst@v5
         with:
           typst-version: v0.15.1
-      - run: typst compile cee492_report.typ cee492_report.pdf
-      - uses: actions/upload-artifact@v7
+
+      - name: Compile Typst report
+        run: typst compile cee492_report.typ cee492_report.pdf
+
+      - uses: actions/upload-artifact@v4
         with:
-            # archive: false uploads the PDF directly, so downloading it gives
-            # you the PDF rather than a zip file you have to unpack. The
-            # artifact is then named after the file: cee492_report.pdf
-            archive: false
-            path: cee492_report.pdf
+          name: cee492_report
+          path: cee492_report.pdf
+
+      - name: Commit and push updated PDF
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cee492_report.pdf
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto-update report PDF"
+            git push
+          fi
