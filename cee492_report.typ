@@ -164,7 +164,7 @@ The relationships among the mixture components are also important. For example, 
   caption: [Pairwise relationships and Spearman rank correlations among mixture variables, age, and compressive strength.],
 ) <fig:corner>
 
-@fig:illustrates the relationship between binder composition and 28-day concrete compressive strength using a ternary diagram of cement, blast furnace slag, and fly ash proportions. Comparing specimens at the same testing age allows the relationship between binder composition and compressive strength to be examined without differences in specimen age affecting the comparison. 
+@fig:ternary illustrates the relationship between binder composition and 28-day concrete compressive strength using a ternary diagram of cement, blast furnace slag, and fly ash proportions. Comparing specimens at the same testing age allows the relationship between binder composition and compressive strength to be examined without differences in specimen age affecting the comparison. 
 
 The figure shows that some mixtures with higher cement proportions achieve relatively high compressive strength. However, high strength is also observed in mixtures containing slag or fly ash, suggesting that partially replacing cement with these materials does not necessarily result in lower strength. Considerable variation in compressive strength is observed even among mixtures with similar binder proportions. This indicates that binder composition alone cannot fully explain the differences in strength. Other factors, such as water content, total binder content, and chemical admixtures, may also contribute to the observed variation. Therefore, multiple mixture characteristics should be considered when developing predictive models for concrete compressive strength.
 
