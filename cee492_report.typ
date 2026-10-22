@@ -141,9 +141,6 @@ Therefore, the primary response variable for this project will be *concrete comp
 
 == *Exploratory Data Analysis*
 
-[please add description]
-
-[A reading guide and explanation for each figure is provided as a text file with the same name in the `figures/eda/` folder of the project repository.]
 
 @fig:raincloud shows the distribution of compressive strength of concrete in different ages. Overall, the median value of compressive strength increases with age, especially during the early stage.The median compressive strength increased from around 16 MPa at 3 days to 34 MPa at 28 days, and continue to increase to 52 MPa at 56 days. However, the compressive strength varies within each age group. This variability suggests that curing age is not sufficient to be the only variable to explain concrete strength. 
 
@@ -174,9 +171,9 @@ Meanwhile, these relationships are not necessarily linear. For example, the rela
   caption: [Binder composition and 28-day compressive strength.],
 ) <fig:ternary>
 
-@fig:wb illustrates the relationship between the water-cement ratio and the compressive strength of concrete, the age of the test specimens are indicated by color. A clear negative correlation can be observed as mixtures with lower water-cement ratios typically achieve higher compressive strengths. This relationship is consistent with the role of water in cement-based materials. Although water is essential for cement hydration, excessive amount of water can lead to increasing porosity of the hardened material, which may reduce compressive strength. 
+@fig:wb illustrates the relationship between the water-to-binder ratio and the compressive strength of concrete, the age of the test specimens are indicated by color. A clear negative correlation can be observed as mixtures with lower water-to-binder ratios typically achieve higher compressive strengths. This relationship is consistent with the role of water in cement-based materials. Although water is essential for cement hydration, excessive amount of water can lead to increasing porosity of the hardened material, which may reduce compressive strength.
 
-However, differences still exist among specimens with similar water-to-binder ratios. The color distribution indicates that specimens tested at later ages generally show higher strength than those tested at earlier ages with comparable water-to-cement ratios. 
+However, differences still exist among specimens with similar water-to-binder ratios. The color distribution indicates that specimens tested at later ages generally show higher strength than those tested at earlier ages with comparable water-to-binder ratios; therefore, it is uncertain whether the effect of the water-to-binder ratio will vary with specimen age or changes in binder composition.
 
 #figure(
   image("figures/eda/fig4_wb_joint.png", width: 100%),
@@ -184,7 +181,7 @@ However, differences still exist among specimens with similar water-to-binder ra
 ) <fig:wb>
 
 @fig:development provides a more detailed analysis of strength development by tracking the change in strength over time for different concrete mixtures.Unlike @fig:raincloud, @fig:development examines measurement data for the same mix design at multiple ages.
-The strength of most mixtures increases rapidly during the early curing period, and the rate slows down later. Mixtures with lower water-to-cement ratios usually can achieve higher compressive strengths.
+The strength of most mixtures increases rapidly during the early curing period, and the rate slows down later. Mixtures with lower water-to-binder ratios usually can achieve higher compressive strengths.
 
 @fig:development (b) further quantifies the relationship by normalizing the strength of each mixture relative to 28-day strength.The median strength rise from ~0.46 at day 3 to 0.63 at day 7, and further to 0.82 at day 14. By day 56, the median reached 1.15, continue increasing to 1.25 between days 90 and 100. 
 #figure(
@@ -223,3 +220,5 @@ All models will use the same eight source predictors and untransformed strength 
 Mean validation root mean squared error (RMSE) will determine the settings for each model and the preferred model. All four models will then be fitted to the full training set and evaluated once on the same test observations. Test RMSE, mean absolute error (MAE), and $R^2$ will be reported, with RMSE and MAE expressed in MPa. Predicted-versus-observed and residual plots will show where errors occur. Test results will not guide further tuning or changes to preprocessing.
 
 SHapley Additive exPlanations (SHAP) will explain RF predictions @lundberg2017, with approximate Shapley values calculated through ShapML.jl. Training observations will provide the reference data, and explanations will cover test observations after model settings are fixed. Mean absolute SHAP values will rank predictor contributions. A summary plot and dependence plots for the leading predictors will show contributions to higher or lower predicted strength relative to the reference prediction. These results explain model behavior and do not establish causal effects. Correlated ingredients may affect how contributions are shared.
+
+The model's predictive ability will be limited by the range and distribution of the available data. Predictions for mix proportions or curing ages that are poorly represented in the dataset may be less reliable. The interpretation of the model's performance should be limited to dataset.
