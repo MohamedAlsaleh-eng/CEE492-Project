@@ -182,7 +182,7 @@ However, differences still exist among specimens with similar water-to-binder ra
   caption: [Compressive strength versus water-to-binder ratio by specimen age.],
 ) <fig:wb>
 
-@fig:development provides a more detailed analysis of strength development by tracking the change in strength over time for different concrete mixtures. Unlike @fig:raincloud, @fig:development examines measurement data for the same mix design at multiple ages.
+@fig:development provides a more detailed analysis of strength development by tracking the change in strength over time for different concrete mixtures. Unlike @fig:raincloud, @fig:development (a) examines measurement data for the same mix design at multiple ages.
 The strength of most mixtures increases rapidly during the early curing period, and the rate slows down later. Mixtures with lower water-to-binder ratios usually can achieve higher compressive strengths.
 
 @fig:development (b) provides a more detailed comparison by normalizing the compressive strength of each mixture relative to 28-day strength. The normalized strength increases from approximately 0.46 at day 3 to 0.63 at day 7, and further to 0.82 at day 14. By approximately 90 days, the median reaches 1.25 indicating that the typical strength is about 25% higher than the corresponding 28-day value among the mixtures represented at that age. However, the shaded percentile ranges show variation in strength development across different mixtures. Therefore, during the general trend suggests increasing strength with age, the rate of development varies among mixture designs.
