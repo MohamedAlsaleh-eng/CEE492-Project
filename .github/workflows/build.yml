@@ -13,7 +13,7 @@ jobs:
   render-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - run: sudo apt-get update && sudo apt-get install -y fonts-texgyre
 
@@ -24,9 +24,9 @@ jobs:
       - name: Compile Typst report
         run: typst compile cee492_report.typ cee492_report.pdf
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
-          name: cee492_report
+          archive: false
           path: cee492_report.pdf
 
       - name: Commit and push updated PDF
