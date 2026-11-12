@@ -1,0 +1,45 @@
+Figure - Feature-set comparison and standardized coefficients of multiple linear regression
+File: mlr_feature_sets.png (vector version mlr_feature_sets.pdf is produced locally; *.pdf is git-ignored)
+Code: modeling/mlr/mlr.py, function fig_feature_sets
+
+COLOUR CODE (same in both MLR figures)
+- Grey, open markers  = baseline model (eight source predictors).
+- Blue, filled markers = selected model (ln(age) + w/b).
+- Black = other feature sets that were tested but not selected.
+
+PANEL (a) - which feature set predicts best
+- Each row is one MLR feature set:
+    Baseline (8 source predictors)       - the eight original variables, as planned
+    ln(age) replaces age                 - coordinate transform of age
+    ln(age) + w/b                        - adds water-to-binder ratio (SELECTED, bold)
+    ln(age) + w/b, no aggregates         - feature-selection test
+    ln(age) + w/b, ln(strength) target   - response transform
+- x-axis: RMSE in MPa (lower is better).
+- Short vertical ticks: RMSE on each of the 5 grouped validation folds.
+- Circle with horizontal bar: mean +/- SD of the 5 validation RMSEs. Model selection is
+  based on this value only.
+- Open diamond (just below each row): RMSE on the held-out test set. The test set was
+  NOT used for selection; it is shown for reference.
+- Dashed vertical line: test RMSE of a "mean-only" predictor that always predicts the
+  training-set mean strength (15.7 MPa). A useful model must be well to the left.
+
+What to look for: replacing age with ln(age) moves the error from about 10.5 to about
+7.4 MPa, and every fold improves. Adding w/b helps only slightly and not in every fold.
+Removing the aggregates or modelling ln(strength) makes the validation error worse.
+
+PANEL (b) - what the models learned
+- Each row is one predictor. x-axis: standardized coefficient = change in predicted
+  strength (MPa) when that predictor increases by one standard deviation.
+- Dot = estimate, line = 95% confidence interval from heteroscedasticity-robust (HC3)
+  standard errors. Rows shared by both models show two offset intervals.
+- "Age (baseline only)", "ln(age) (selected only)" and "w/b (selected only)" appear in
+  one model only, so they are drawn once and are not directly comparable to each other.
+- An interval crossing the vertical zero line means the coefficient is not
+  significantly different from zero (e.g. water in the selected model).
+
+CAUTIONS
+- In the selected model, w/b is strongly correlated with cement, slag, fly ash and
+  water (VIF up to 24.5), so its coefficients should not be read one at a time.
+- Positive aggregate coefficients do not mean "more aggregate makes concrete
+  stronger"; the ingredients together fill one cubic metre, so they partly describe the
+  overall mixture design.

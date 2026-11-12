@@ -1,0 +1,35 @@
+Figure - Test-set diagnostics of the baseline and selected multiple linear regression models
+File: mlr_diagnostics.png (vector version mlr_diagnostics.pdf is produced locally; *.pdf is git-ignored)
+Code: modeling/mlr/mlr.py, function fig_diagnostics
+
+All three panels use the 201 held-out test specimens (87 mixtures never seen in
+training). Open grey circles = baseline model (8 source predictors). Filled blue dots =
+selected model (ln(age) + w/b). Residual = observed - predicted, so a NEGATIVE residual
+means the model OVERPREDICTED the strength.
+
+PANEL (a) - predicted vs observed
+- x-axis: measured strength; y-axis: predicted strength. A perfect model puts every
+  point on the diagonal line. Grey band: +/-10 MPa around the diagonal.
+- The legend gives each model's test RMSE in MPa (10.4 vs 6.8).
+- What to look for: the blue points sit closer to the line. Above about 60 MPa the
+  points fall below the line, i.e. strong concretes are underpredicted.
+
+PANEL (b) - residual vs specimen age
+- x-axis: age on a log scale. Baseline points are drawn slightly to the left and
+  selected points slightly to the right of each test age so they do not overlap.
+- Lines with squares: median residual in each age group (3, 7, 14, 28, 56, 90-100,
+  180 and 270-365 days; groups with at least 5 specimens), plotted at the group's
+  median age.
+- What to look for: the grey baseline line is strongly curved - early ages are
+  overpredicted and 56-100 days are underpredicted - because a straight line in age
+  cannot follow strength gain that slows down. The blue line is nearly flat up to about
+  100 days. At 180-365 days both models overpredict, because ln(age) keeps increasing
+  while real strength levels off.
+
+PANEL (c) - residual vs predicted strength (selected model only)
+- Black curve: LOWESS smoothed trend of the residuals.
+- Dashed lines: +/-1.96 SD of all residuals pooled together. If errors were normal with
+  constant spread, about 95% of points would lie inside.
+- What to look for: the spread of residuals grows with predicted strength
+  (heteroscedasticity; Breusch-Pagan p < 0.001), and the trend dips below zero at high
+  predictions.

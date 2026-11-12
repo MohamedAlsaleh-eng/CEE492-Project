@@ -8,3 +8,6 @@
 # Careful: some editors strip trailing CRs on save.
 Icon
 .vscode/
+
+# Python
+__pycache__/

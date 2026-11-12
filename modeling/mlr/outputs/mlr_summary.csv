@@ -1,0 +1,6 @@
+variant,label,n_predictors,cv_rmse,cv_rmse_sd,cv_mae,cv_r2,test_rmse,test_mae,test_r2
+baseline,Baseline (8 source predictors),8,10.5298,0.7239,8.289,0.5679,10.3861,8.101,0.5628
+log_age,ln(age) replaces age,8,7.4313,0.5043,5.694,0.7838,6.8115,5.2972,0.812
+log_age_wb,ln(age) + w/b,9,7.3941,0.5025,5.6554,0.7864,6.7655,5.2453,0.8145
+no_aggregates,"ln(age) + w/b, no aggregates",7,7.5491,0.5386,5.7999,0.7767,6.5551,5.1382,0.8259
+log_target,"ln(age) + w/b, ln(strength) target",9,9.4123,1.6965,6.394,0.6504,8.9249,6.1925,0.6772

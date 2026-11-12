@@ -224,3 +224,66 @@ Mean validation root mean squared error (RMSE) will determine the settings for e
 SHapley Additive exPlanations (SHAP) will explain RF predictions @lundberg2017, with approximate Shapley values calculated through ShapML.jl. Training observations will provide the reference data, and explanations will cover test observations after model settings are fixed. Mean absolute SHAP values will rank predictor contributions. A summary plot and dependence plots for the leading predictors will show contributions to higher or lower predicted strength relative to the reference prediction. These results explain model behavior and do not establish causal effects. Correlated ingredients may affect how contributions are shared.
 
 The model's predictive ability will be limited by the range and distribution of the available data. Predictions for mix proportions or curing ages that are poorly represented in the dataset may be less reliable. The interpretation of the model's performance should be limited to dataset.
+
+== *Data Preparation and Partitioning*
+
+Before modeling, the 1,030 records were checked for repeated entries. Twenty-five records were exact copies of another record in all nine variables and were removed, leaving 1,005 records from 428 unique mixtures. Nine combinations of mixture and age contain two records with different strength values. These records were kept because they represent separate test results rather than repeated entries.
+
+The cleaned records were divided into training and test sets by mixture, as planned. Whole mixtures were assigned to the test set in random order until 20% of the records were reached (random seed 492). The training set contains 804 records from 341 mixtures, and the test set contains 201 records from 87 mixtures, with no mixture appearing in both sets. The training mixtures were then assigned to five validation folds of 160 or 161 records each. The strength distributions of the two sets are similar (mean of 35.4 MPa for training and 34.9 MPa for testing; two-sample Kolmogorov–Smirnov test, p = 0.94). The assignment of every record is stored in `data/concrete_split.csv`, and the same file is used for all four models.
+
+== *Multiple Linear Regression*
+
+Multiple linear regression (MLR) was fitted by ordinary least squares in Python. Following the plan, the baseline model used the eight source predictors. The inputs were standardized with the means and standard deviations of each training fold, so each coefficient represents the change in predicted strength (MPa) for an increase of one standard deviation in that predictor.
+
+The exploratory analysis suggested two relationships that a linear model cannot represent with the source predictors alone. First, strength increases with age in a monotonic but nonlinear way (@fig:raincloud, @fig:development), so a straight-line age term is expected to fit poorly. Second, strength decreases with the water-to-binder ratio (@fig:wb), which is a ratio of four inputs rather than a linear combination of them. Therefore, four alternative feature sets were compared with the baseline: (1) age replaced by its natural logarithm, ln(age); (2) ln(age) together with the water-to-binder ratio, w/b = water/(cement + slag + fly ash); (3) the second set without the two aggregate variables, as a test of feature selection; and (4) the second set with ln(strength) as the response, with predictions transformed back to MPa. All feature sets were evaluated on the same five validation folds, and the set with the lowest mean validation RMSE was selected. The test set was used only once, after this selection.
+
+@fig:mlr-features (a) and @tab:mlr summarize the comparison. The baseline model had a mean validation RMSE of 10.5 ± 0.7 MPa. Replacing age with ln(age) reduced this value to 7.4 ± 0.5 MPa, a reduction of 29%, and the improvement appeared in every validation fold. Adding w/b gave only a small further reduction (7.39 MPa), and this reduction was not consistent across folds. Removing the aggregates increased the error slightly (7.55 MPa), so the aggregate variables were kept. Transforming the response was not helpful: the ln(strength) model had a higher and less stable validation RMSE (9.4 ± 1.7 MPa). This is likely because fitting on the logarithmic scale gives less weight to errors at high strengths, which are the largest errors when measured in MPa. Based on the selection rule, the ln(age) + w/b feature set was chosen. On the test set, it achieved an RMSE of 6.8 MPa, an MAE of 5.2 MPa, and an $R^2$ of 0.81, compared with 10.4 MPa, 8.1 MPa, and 0.56 for the baseline. For reference, predicting the training mean for every specimen gives a test RMSE of 15.7 MPa.
+
+#figure({
+  set text(hyphenate: false)
+  set par(justify: false)
+  table(
+    columns: (3.4fr, 0.45fr, 1.6fr, 0.95fr, 0.95fr, 0.85fr),
+    inset: 3pt,
+    align: (left, center, center, center, center, center),
+
+    table.header(
+      [*Feature set*],
+      [*p*],
+      [*Validation RMSE*],
+      [*Test RMSE*],
+      [*Test MAE*],
+      [*Test $R^2$*],
+    ),
+
+    [Baseline], [8], [10.53 ± 0.72], [10.39], [8.10], [0.56],
+    [ln(age) replaces age], [8], [7.43 ± 0.50], [6.81], [5.30], [0.81],
+    [*ln(age) + w/b (selected)*], [*9*], [*7.39 ± 0.50*], [*6.77*], [*5.25*], [*0.81*],
+    [ln(age) + w/b, no aggregates], [7], [7.55 ± 0.54], [6.56], [5.14], [0.83],
+    [ln(strength) response], [9], [9.41 ± 1.70], [8.92], [6.19], [0.68],
+    [Mean-only predictor], [0], [–], [15.72], [12.80], [0.00],
+  )},
+  caption: [Performance of multiple linear regression feature sets (p: number of predictors; RMSE and MAE in MPa; validation values are mean ± SD over five folds).],
+) <tab:mlr>
+
+@fig:mlr-features (b) compares the standardized coefficients of the baseline and selected models. The 95% confidence intervals are based on heteroscedasticity-robust (HC3) standard errors, because the spread of the residuals increases with predicted strength (Breusch–Pagan test, p < 0.001). In both models, cement, slag, and fly ash have positive coefficients, and cement has the largest effect among the ingredients. In the baseline model, an additional 1 kg/m#super[3] of cement is associated with 0.12 MPa higher strength, while an additional 1 kg/m#super[3] of water is associated with 0.11 MPa lower strength. In the selected model, ln(age) has the second-largest coefficient after cement (10.2 and 11.2 MPa per standard deviation, respectively) and the narrowest confidence interval. However, when w/b is included, the water coefficient is no longer significantly different from zero, because the effect of water is now shared with w/b. The variance inflation factors (VIF) also increase from a maximum of 8.0 in the baseline model to 24.5 for cement and 19.0 for w/b in the selected model. Therefore, the coefficients of the selected model should not be interpreted one at a time. The positive coefficients of the aggregates should also be interpreted with caution. Because the ingredient amounts together make up one cubic meter of concrete, these coefficients may reflect differences in the overall mixture design rather than a direct strengthening effect of the aggregates. This collinearity is one reason for the ridge penalty used in the polynomial model.
+
+#figure(
+  image("modeling/mlr/figures/mlr_feature_sets.png", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [Feature-set comparison and standardized coefficients of multiple linear regression.],
+) <fig:mlr-features>
+
+@fig:mlr-diagnostics shows where the errors occur on the test set. The baseline model overpredicted the strength of young specimens (mean residual of −10.9 MPa at 3–7 days) and underpredicted specimens tested at 56–100 days (+8.2 MPa). This is the pattern expected when a curved strength-gain relationship is described by a straight line. The ln(age) term removed most of this pattern (−1.8 and +1.9 MPa for the same age groups). Two systematic errors remain. First, the 14 test specimens tested at 180–365 days were overpredicted by 6.4 MPa on average, because ln(age) keeps increasing while the measured strength levels off after about 90 days (@fig:development). Second, specimens stronger than 60 MPa were underpredicted by 5.0 MPa on average, with an RMSE of 10.5 MPa. In addition, the residuals are not normally distributed (Shapiro–Wilk test, p < 0.001), and their spread increases with predicted strength (@fig:mlr-diagnostics (c)).
+
+#figure(
+  image("modeling/mlr/figures/mlr_diagnostics.png", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [Test-set diagnostics of the baseline and selected multiple linear regression models.],
+) <fig:mlr-diagnostics>
+
+To check whether these results depend on the particular split, the baseline and selected models were refitted on 200 alternative mixture-grouped 80/20 splits. The selected model had a median test RMSE of 7.2 MPa (5th–95th percentile: 6.4–8.1 MPa), compared with 10.5 MPa (9.6–11.3 MPa) for the baseline, and it was more accurate in all 200 splits. The test RMSE of 6.8 MPa from the main split is therefore slightly better than typical. The baseline model was also evaluated with ordinary random five-fold cross-validation, which ignores the mixture groups. The result (10.46 MPa) was almost identical to the grouped result (10.53 MPa). This suggests that grouping has little effect for a linear model, which cannot memorize individual recipes. More flexible models may behave differently, which is why the grouped split is kept for all models.
+
+The selected MLR model reduces the error of the mean-only predictor by 57%, and 59% and 83% of the test predictions fall within ±5 MPa and ±10 MPa of the measured strength, respectively. However, an RMSE of 6.8 MPa is about 20% of the median 28-day strength in the dataset (34 MPa, @fig:raincloud), and the largest errors occur for high-strength mixtures and long curing ages. Therefore, the MLR model is useful for describing general trends and as a baseline for the other models, but it is not accurate enough to select a mixture that must meet a specific target strength. The diagnostics suggest that accuracy could be improved by an age term that levels off at long ages, by interaction terms between age and mixture composition, and by models that can represent nonlinear effects, such as the polynomial and tree-based models. Reading guides for @fig:mlr-features and @fig:mlr-diagnostics are provided as text files with the same names in the `modeling/mlr/figures/` folder.

@@ -1,0 +1,111 @@
+{
+  "selected": "log_age_wb",
+  "naive_test": {
+    "rmse": 15.716261900321895,
+    "mae": 12.803496521360858,
+    "r2": -0.0009978288409859815
+  },
+  "random_cv_baseline_rmse": [
+    10.459954807617496,
+    0.750690701028323
+  ],
+  "resplit_baseline_rmse_pct": [
+    9.6,
+    10.48,
+    11.33
+  ],
+  "resplit_selected_rmse_pct": [
+    6.37,
+    7.22,
+    8.06
+  ],
+  "resplit_improvement_all": true,
+  "within_5": 0.5920398009950248,
+  "within_10": 0.8258706467661692,
+  "within_10_baseline": 0.6766169154228856,
+  "test_mean_strength": 34.85330925373134,
+  "error_by_age": [
+    {
+      "age": "3\u20137 d",
+      "n": 49,
+      "bias": -1.77,
+      "rmse": 5.46
+    },
+    {
+      "age": "14\u201328 d",
+      "n": 95,
+      "bias": 0.43,
+      "rmse": 6.36
+    },
+    {
+      "age": "56\u2013100 d",
+      "n": 43,
+      "bias": 1.92,
+      "rmse": 7.49
+    },
+    {
+      "age": "180\u2013365 d",
+      "n": 14,
+      "bias": -6.4,
+      "rmse": 10.3
+    }
+  ],
+  "baseline_bias_by_age": [
+    {
+      "age": "3\u20137 d",
+      "bias": -10.86
+    },
+    {
+      "age": "14\u201328 d",
+      "bias": 2.84
+    },
+    {
+      "age": "56\u2013100 d",
+      "bias": 8.16
+    },
+    {
+      "age": "180\u2013365 d",
+      "bias": -11.13
+    }
+  ],
+  "error_by_strength": [
+    {
+      "strength": "<20",
+      "n": 36,
+      "bias": -2.59,
+      "rmse": 5.18
+    },
+    {
+      "strength": "20\u201340",
+      "n": 97,
+      "bias": -1.81,
+      "rmse": 5.36
+    },
+    {
+      "strength": "40\u201360",
+      "n": 54,
+      "bias": 2.71,
+      "rmse": 8.5
+    },
+    {
+      "strength": "\u226560",
+      "n": 14,
+      "bias": 4.96,
+      "rmse": 10.51
+    }
+  ],
+  "shapiro_p": 1.0765190390502408e-05,
+  "breusch_pagan_p": 5.084216227911553e-13,
+  "train_r2_selected": 0.8126576947992519,
+  "train_r2_baseline": 0.6110403065669655,
+  "baseline_raw_coef": {
+    "cement": 0.1242,
+    "slag": 0.1054,
+    "flyash": 0.0904,
+    "water": -0.1128,
+    "sp": 0.3452,
+    "coarse": 0.0205,
+    "fine": 0.0315,
+    "age": 0.1167
+  }
+}
