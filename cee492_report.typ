@@ -64,17 +64,13 @@
 
 == *Dataset Source and Overview*
 
-This project will use the Concrete Compressive Strength dataset available through the UCI Machine Learning Repository @yeh1998dataset. The dataset was originally provided by Prof. I-Cheng Yeh of Chung-Hua University. The data were developed from laboratory measurements of concrete mixtures, where the actual compressive strength of each mixture was determined at a specified age. The dataset is provided in raw, unscaled form and is available as an Excel file (Concrete_Data.xls).
-
-Dataset source: #link("https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength")[UCI Machine Learning Repository, _Concrete Compressive Strength_ dataset]
-
-DOI: #link("https://doi.org/10.24432/C5PK67")[10.24432/C5PK67]
+This project will use the Concrete Compressive Strength dataset available through the UCI Machine Learning Repository @yeh1998dataset. The dataset was originally provided by Prof. I-Cheng Yeh of Chung-Hua University. The data were developed from laboratory measurements of concrete mixtures, where the actual compressive strength of each mixture was determined at a specified age. The dataset is provided in raw, unscaled form and is available as an Excel file (Concrete_Data.xls), which can be downloaded from the #link("https://archive.ics.uci.edu/dataset/165/concrete+compressive+strength")[UCI Machine Learning Repository website] and is identified by the DOI #link("https://doi.org/10.24432/C5PK67")[10.24432/C5PK67].
 
 The dataset contains 1,030 observations and nine quantitative variables. Eight variables describe the concrete mixture composition and age and are used as input variables. The ninth variable, concrete compressive strength, is the output variable. The dataset contains no missing values.
 
 == *Dataset Variables*
 
-The variables included in the dataset are summarized in Table @tab:variables.
+@tab:variables summarizes the nine variables included in the dataset. The amounts of the seven mixture components are given in kilograms per cubic meter of concrete, the specimen age is given in days, and the compressive strength is given in MPa. Because this project aims to predict compressive strength from the mixture composition and age, the primary response variable will be *concrete compressive strength in MPa*, while the remaining eight variables will be considered potential predictors.
 
 #figure(
   table(
@@ -137,8 +133,6 @@ The variables included in the dataset are summarized in Table @tab:variables.
   caption: [Description of dataset variables.],
 ) <tab:variables>
 
-Therefore, the primary response variable for this project will be *concrete compressive strength in MPa*, while the remaining eight variables will be considered potential predictors.
-
 == *Exploratory Data Analysis*
 
 
@@ -185,7 +179,7 @@ However, differences still exist among specimens with similar water-to-binder ra
 @fig:development provides a more detailed analysis of strength development by tracking the change in strength over time for different concrete mixtures. Unlike @fig:raincloud, @fig:development (a) examines measurement data for the same mix design at multiple ages.
 The strength of most mixtures increases rapidly during the early curing period, and the rate slows down later. Mixtures with lower water-to-binder ratios usually can achieve higher compressive strengths.
 
-@fig:development (b) provides a more detailed comparison by normalizing the compressive strength of each mixture relative to 28-day strength. The normalized strength increases from approximately 0.46 at day 3 to 0.63 at day 7, and further to 0.82 at day 14. By approximately 90 days, the median reaches 1.25 indicating that the typical strength is about 25% higher than the corresponding 28-day value among the mixtures represented at that age. However, the shaded percentile ranges show variation in strength development across different mixtures. Therefore, during the general trend suggests increasing strength with age, the rate of development varies among mixture designs.
+@fig:development (b) provides a more detailed comparison by normalizing the compressive strength of each mixture relative to 28-day strength. The normalized strength increases from approximately 0.46 at day 3 to 0.63 at day 7, and further to 0.82 at day 14. By approximately 90 days, the median reaches 1.25 indicating that the typical strength is about 25% higher than the corresponding 28-day value among the mixtures represented at that age. However, the shaded percentile ranges show variation in strength development across different mixtures. Therefore, while the general trend suggests increasing strength with age, the rate of development varies among mixture designs.
 #figure(
   image("figures/eda/fig5_strength_development.png", width: 100%),
   placement: auto,
