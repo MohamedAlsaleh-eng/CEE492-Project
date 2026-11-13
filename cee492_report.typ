@@ -311,3 +311,88 @@ Fig. 9 shows the model predictions and residuals on the test set. In Fig. 9 (a),
 
 Overall, polynomial ridge regression improves the prediction compared with the original linear model and captures some nonlinear relationships among the concrete ingredients and age. However, its errors are still large for some older and high-strength specimens. Therefore, it may be useful for preliminary comparisons of mixtures within the range represented by the dataset, but it is not accurate enough to confirm that a concrete mixture meets a required design strength without laboratory testing. Among the regression models completed so far, the selected MLR has the lowest test error. The final comparison should also consider the regression tree and random forest results. Reading guides for @fig:ridge-tuning and @fig:ridge-diagnostics are provided as text files with the same names in the `modeling/ridge/figures/` folder.
 
+
+
+== *Regression Trees*
+The regression tree model was developed using Julia's DecisionTree.jl package.Regression trees perform recursive partitioning of observations based on the values of the independent variables, to minimize differences of compressive strength within each resulting group. Each terminal leaf node generates a predicted value based on the average strength of its training observations.
+
+To control the model’s complexity, two hyperparameters were adjusted: the maximum tree depth and the minimum number of samples per leaf node.The maximum depth limits the number of splits, while the minimum leaf node size determines the minimum number of observations in each terminal node. A larger maximum depth and a smaller leaf node size allow the model to capture more complex relationships, but may lead to overfitting.
+
+Five optional values are considered for the maximum tree depth (3, 5, 8, 12, and unlimited), while four possible values are considered for the minimum number of samples per leaf node (2, 5, 10, and 20,in total of 20 different hyperparameter combinations.Each combination was evaluated using 5-folds cross validation, and the combination with the lowest RMSE is selected for the final model.
+#figure(
+  image(
+    "modeling/rt/rt_rmse_heatmap.png",
+    width: 100%,
+  ),
+  caption: [
+    Mean validation RMSE across 20 regression tree
+    hyperparameter combinations using five-fold
+    cross-validation.
+  ],
+) <fig:rtree-rmse>
+
+As in @fig:rtree-rmse, with the maximum tree depth increased from 3 to 12, RMSE generally decreased, which also shows that deeper tree structures are more effective at modeling the complex relationships. A smaller minimum leaf node size also help to lower errors, especially with deeper tree structures.However, increasing the maximum tree depth over 12 did not make further improvements.Among the 20 hyperparameter combinations, the combination with a maximum depth of 12 and a minimum leaf node size of 2 achieved the lowest RMSE of 8.7 MPa.And the final regression tree using this combination was trained with full training set, followed by evaluation on the test set.
+
+#figure(
+  table(
+    columns: (1fr, 1fr),
+    align: (left, center),
+    stroke: none,
+    inset: (x: 8pt, y: 5pt),
+
+    table.hline(stroke: 0.8pt),
+    [*Metric*], [*Value*],
+    table.hline(stroke: 0.5pt),
+
+    [RMSE (MPa)], [6.756],
+    [MAE (MPa)], [4.917],
+    [$R^2$], [0.815],
+
+    table.hline(stroke: 0.8pt),
+  ),
+  caption: [Regression tree performance on the testing set.],
+) <tab:rtree-performance>
+The predictive performance of the regression tree model was evaluated using RMSE, MAE, and R². As shown in @tab:rtree-performance, the model’s RMSE is 6.756 MPa, the MAE is 4.917 MPa, and R² is 0.815. 
+
+
+#figure(
+  placement: top,
+  scope: "parent",
+  [
+    #image("modeling/rt/rt_predOb.png", width: 100%)
+
+    #v(3pt)
+
+    #grid(
+      columns: (1fr, 1fr, 1fr),
+      align: auto,
+      [a],
+      [b],
+      [c],
+    )
+  ],
+  caption: [
+    Regression tree performance on the testing set:
+    (a) observed versus predicted compressive strength;
+    (b) residuals versus specimen age;
+    and (c) residuals versus predicted compressive strength.
+  ],
+) <fig:rtree-performance>
+
+@fig:rtree-performance(a) shows that most of the predicted compressive strengths are distributed near the 1:1 reference line, indicating consistency between the model’s predictions and the observed values. Most of the predicted values fall within an error band of ±10 MPa. However, some observed values differ significantly from the reference line, which means that the model’s predictive accuracy is lower for certain concrete mix designs.In @fig:rtree-performance(b), at different curing ages, the residuals are distributed on both sides of the zero-residual line. It can be told that the model does not consistently overestimate or underestimate the compressive strength across all curing ages.However, the Lowess trend gradually decreases as specimen age increases, which means it turns from underestimate to overestimate compressive strength when curing ages increase.Similarly, @fig:rtree-performance(c) shows that at lower and medium predicted strengths, the residuals are generally concentrated near zero, and at higher predicted strengths, the LOWESS trend shows an obvious downward slope. This suggests that the model may tend to overestimate compressive strength in higher predicted strength. 
+
+To assess the relative importance of the eight input variables in the regression tree model, each feature was randomly permuted 30 times while keeping the remaining features constant. For each permutation, calculate the change in training RMSE relative to the performance of the original model. And the results are included in @fig:rt-feature-importance.
+#figure(
+  image("modeling/rt/rt_feature_importance.png", width: 100%),
+  caption: [
+    Permutation feature importance of the regression tree model.
+    Points represent the mean change in training RMSE across
+    30 random permutations.
+  ],
+) <fig:rt-feature-importance>
+The cement content shows the highest feature importance, the average increase in RMSE is qround 14 MPa,followed by specimen age (12.7 MPa), water content (9.5 MPa), and slag content (7.3 MPa). The importance scores for the remaining four variables—fine aggregate, fly ash, coarse aggregate, and superplasticizer—are relatively smaller, ranging from 2 to 3 MPa. Shorter error bars may indicate that the importance estimates vary little across multiple permutations. These results suggest that the regression tree mainly depends on cement content, curing age, moisture content, and slag content to predict concrete compressive strength. However, it is important to note that the feature importance measures the model’s dependence on each feature, rather than the impact of these features on concrete strength.
+
+This regression tree model, with eight input variables, performed well in predicting the compressive strength of concrete. By optimizing hyperparameters（maximun depth and minimum leaf node size）, the RMSE in the 5-folds cross-validation decreased from approximately 11.60 MPa for a shallow tree (maximum depth of 3 and minimum leaf node size of 2) to 8.70 MPa(maximum depth of 12 and minimum leaf node size of 2),reducing it by approximately 25%.
+On the testing set, the final model had RMSE of 6.756 MPa, MAE of 4.917 MPa, and R² of 0.815, that means the model fits approximately 81.5% of the observed variation in compressive strength.On the testing set, the final model had RMSE of 6.756 MPa, MAE of 4.917 MPa, and R² of 0.815, that means the model fits approximately 81.5% of the observed variation in compressive strength.
+
+While having such performance, there are still some limitations.The MAE of approximately 4.92 MPa indicates that prediction errors is still big; residual analysis shows a slight tendency to overestimate compressive strength at longer curing ages and higher predicted strength levels. Moreover, the predictions generated by a single regression tree will exhibit piecewise constant distribution, limits its ability to smoothly capture changes in compressive strength as input variables change.
