@@ -318,7 +318,7 @@ Random forest (RF) regression was used to model nonlinear relationships among th
 @fig:rf-tuning compares these two validation strategies. The minimum grouped validation RMSE was *6.34 ± 0.89 MPa* (mean ± standard deviation across folds), obtained with unrestricted maximum depth, a minimum leaf size of two, and four candidate predictors per split. For this selected configuration, ordinary random cross-validation yielded *5.65 ± 0.74 MPa*. Its lower error is consistent with the possibility that ordinary random folds contain observations at different ages from mixtures also represented in training, thereby providing an easier prediction task. Accordingly, the grouped estimate better reflects the stated goal of predicting strength for unseen mixture recipes; the random-fold result was not used to choose hyperparameters.
 
 #figure(
-  image("modeling/rf/figures/fig_rf_tuning.png", width: 100%),
+  image("modeling/rf/fig_rf_tuning.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [Random forest hyperparameter evaluation. (a) Mean RMSE ± one standard deviation across the five *mixture-grouped* validation folds, used for model selection. (b) Ordinary random five-fold cross-validation, shown as a supplementary diagnostic only. Each configuration contains 500 trees; the star identifies the configuration selected from panel (a).],
@@ -342,7 +342,7 @@ The selected RF model was refitted using all 804 training observations and evalu
 @fig:rf-diagnostics summarizes the RF test predictions and residuals. Predictions generally track the measured strengths, while errors remain larger for some high-strength specimens. For the 14 specimens with measured strength above 60 MPa, the RMSE increased to *10.07 MPa*, with a mean observed-minus-predicted residual of *+7.18 MPa*, indicating underprediction. In contrast, the 14 specimens tested at ages of at least 180 days had an RMSE of *4.91 MPa* and mean residual of *+0.64 MPa*, substantially smaller in magnitude than the long-age bias reported for the selected MLR model. Because these subgroups contain few observations, the numerical differences should not be generalized without further validation. Despite its improved overall accuracy, the RF model cannot replace laboratory strength testing when compliance with a specified design strength must be established.
 
 #figure(
-  image("modeling/rf/figures/fig_rf_test_diagnostics.png", width: 100%),
+  image("modeling/rf/fig_rf_test_diagnostics.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [Random forest performance on the held-out test set (n = 201). (a) Predicted versus observed compressive strength, with the 1:1 line and a ±10 MPa band. (b) Observed-minus-predicted residuals by specimen age, with medians. (c) Residuals versus predicted strength, with dashed lines at ±10 MPa.],
@@ -351,7 +351,7 @@ The selected RF model was refitted using all 804 training observations and evalu
 To interpret the fitted RF model, approximate SHapley Additive exPlanations (SHAP) were calculated in Julia using ShapML.jl @lundberg2017. A random sample of 100 training observations provided the reference distribution, and stochastic Shapley estimates were calculated for all 201 test observations, using 60 samples per feature. Mean absolute SHAP values were used to summarize global importance. The leading predictors were age (*31.7%* of summed mean absolute SHAP importance), cement (*27.0%*), and water (*14.0%*), followed by superplasticizer (*8.7%*) and slag (*7.9%*) (@fig:rf-importance). These percentages represent *relative contributions to the fitted model's predictions*, rather than proportions of explained variance or physical causal effects.
 
 #figure(
-  image("modeling/rf/figures/fig_rf_shap_importance.png", width: 100%),
+  image("modeling/rf/fig_rf_shap_importance.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [Global random forest feature importance based on mean absolute approximate SHAP values across the 201 test observations. Values are normalized to sum to 100%.],
@@ -360,17 +360,17 @@ To interpret the fitted RF model, approximate SHapley Additive exPlanations (SHA
 The SHAP summary (@fig:rf-summary) and dependence plots (@fig:rf-dependence) provide information about the direction and nonlinearity of these associations. Larger ages and cement contents generally contributed positively to predicted strength, whereas greater water content generally contributed negatively. Age contributions increased markedly at early curing ages and changed less at later ages, consistent with nonlinear strength development. Positive SHAP contributions were also associated with greater slag content in portions of the observed data. However, dependence patterns need not be monotonic for every observation, and the apparent predictor effects may partly reflect correlations and interactions among ingredients. Because ShapML.jl produces sampling-based approximations with a finite training reference sample, these SHAP values should be interpreted as estimates of the model's behavior, not exact or causal decompositions of concrete strength.
 
 #figure(
-  image("modeling/rf/figures/fig_rf_shap_summary.png", width: 100%),
+  image("modeling/rf/fig_rf_shap_summary.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [SHAP summary for the 201 held-out test observations. Each point represents one observation; its horizontal position indicates the estimated contribution to predicted compressive strength, while color represents the corresponding predictor value.],
 ) <fig:rf-summary>
 
 #figure(
-  image("modeling/rf/figures/fig_rf_shap_dependence.png", width: 100%),
+  image("modeling/rf/fig_rf_shap_dependence.png", width: 100%),
   placement: auto,
   scope: "parent",
   caption: [SHAP dependence plots for (a) specimen age, (b) cement, (c) water, and (d) slag. Vertical coordinates are estimated contributions to predicted strength (MPa); colors indicate the corresponding secondary predictor shown by each color scale.],
 ) <fig:rf-dependence>
 
-Overall, RF outperformed the selected MLR and polynomial ridge models on the shared held-out test set and captured important nonlinear associations. Nonetheless, systematic underprediction of strengths above 60 MPa and the observational nature of the dataset limit its use for strength-based acceptance decisions. Validation on independent concrete mixture datasets, particularly with broader coverage of high-strength specimens, would be required before practical deployment. The tuning results, test predictions, subgroup analyses, and approximate SHAP values are retained in `modeling/rf/outputs/`, with the corresponding figures in `modeling/rf/figures/`.
+Overall, RF outperformed the selected MLR and polynomial ridge models on the shared held-out test set and captured important nonlinear associations. Nonetheless, systematic underprediction of strengths above 60 MPa and the observational nature of the dataset limit its use for strength-based acceptance decisions. Validation on independent concrete mixture datasets, particularly with broader coverage of high-strength specimens, would be required before practical deployment. The tuning results, test predictions, subgroup analyses, and approximate SHAP values are retained in `modeling/rf/outputs/`, with the corresponding figures in `modeling/rf/`.
