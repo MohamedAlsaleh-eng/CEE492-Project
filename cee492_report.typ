@@ -461,6 +461,7 @@ Overall, RF outperformed the selected MLR and polynomial ridge models on the sha
 
 == *Comparison of Models*
 
+
 #figure(
   table(
     columns: (2.5fr, 1fr, 1fr, 0.8fr),
@@ -485,3 +486,14 @@ Overall, RF outperformed the selected MLR and polynomial ridge models on the sha
     RMSE and MAE are expressed in MPa.
   ],
 ) <tab:all-comparison>
+
+These four regression models are evaluated using RMSE, MAE, and R² on the test set. The Random Forest model showed the best overall predictive performance, with an RMSE of 5.23 MPa, an MAE of 3.91 MPa, and an R² of 0.889.The Regression Tree and the selected Multiple Linear Regression (MLR) models' perfermance are similar, with RMSE values of 6.756 MPa and 6.766 MPa. Among the four selected models, the Polynomial regression with ridge regularization had the largest prediction error, with a RMSE of 7.617 MPa, a MAE of 5.879 MPa, and R² of 0.765.(@tab:all-comparison)
+
+Compared with the selected MLR model, the random forest reduced the test RMSE by approximately 22.7%, showing that the random forest model can describe the relationships between parameters and the results more thoroughly than the selected linear model.
+Moreover, compared with the regression tree, the random forest reduced the RMSE by 22.6%, indicating that combining of multiple trees performs better than only on a single tree structure.
+
+These four models describe the relationship between concrete mix proportions, curing age, and compressive strength in different ways. The MLR provides a relatively simple framework. Its performance improved significantly after introducing logarithmic transformations of curing age and water-cement ratio.
+
+Polynomial Regression with Ridge Regularization expands the original eight predictors into 44 polynomial features, including squared terms and pairwise interactions, and applied L2 regularization to control coefficient magnitudes.Although the flexibility of this model has improved, its performance did not outperform that of the MLR model. Therefore, introducing additional polynomial terms does not always improve prediction ability.
+
+Regression trees capture nonlinear relationships through recursive splitting and provide an understandable decision rule structure.Random forests further improve predictive performance by combining multiple trees, reducing dependence on the structure and results of any single tree. Both the permutation-based feature importance analysis used for the regression tree and the SHAP analysis applied to the random forest identified curing age, cement, and water content as the three most impactful predictors. However, in the regression tree analysis, slag ranked fourth, where in the random forest’s SHAP analysis, superplasticizer ranked higher than slag. Since feature importance measures changes in prediction error, while SHAP measures contributions to the prediction, the values from the two methods cannot be directly compared. But the consistency identified across the three major predictors indicates that both decision-tree-based models rely highly on similar key features when predicting concrete compressive strength.
