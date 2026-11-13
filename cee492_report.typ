@@ -199,11 +199,11 @@ The second stage of the project will apply multiple predictive modeling approach
 
 We will compare four models for concrete compressive strength: multiple linear regression, polynomial regression with ridge regularization, a regression tree, and random forest (RF). All models will use the seven mixture ingredients and age to predict strength in MPa. The aim is to assess whether more flexible models improve predictions for mixtures absent from the training data. The resulting models could support preliminary mixture assessment within the conditions represented by the dataset.
 
-Multiple linear regression will provide the baseline. The polynomial model will include the eight original predictors, their squared terms, and pairwise interactions. A ridge penalty will limit coefficient size to reduce overfitting. The regression tree will divide observations through successive rules, while RF will average predictions from 500 trees built with random variation in observations and candidate predictors @breiman2001. All models will be implemented in Julia.
+Multiple linear regression will provide the baseline. The polynomial model will include the eight original predictors, their squared terms, and pairwise interactions. A ridge penalty will limit coefficient size to reduce overfitting. The regression tree will divide observations through successive rules, while RF will average predictions from 500 trees built with random variation in observations and candidate predictors @breiman2001. The MLR analysis was implemented in Python, while the RF model and its SHAP explanations were implemented in Julia. The implementation language for each model is documented in its subsection.
 
 The same data split will allocate approximately 80% of observations to training and 20% to testing. Records with identical quantities of the seven ingredients will stay together, including measurements at different ages. These mixture groups will be assigned intact, so the final percentages may differ slightly from 80/20. This approach will assess predictions for unseen recipes and prevent the same recipe from appearing in both sets. Repeated records will be reviewed before the split, and any corrections will apply to all models.
 
-The three tunable models will use grid search with 20 predefined parameter configurations each. Every configuration will be assessed through the same five validation folds within the training set, with mixture groups kept intact. The proposed grids are:
+The three tunable models use grid search with 20 predefined parameter configurations each. Every configuration is evaluated through the same five mixture-grouped validation folds in the training set, with mixture groups kept intact. The predefined grids are:
 
 - *Polynomial regression with ridge regularization:* 20 penalty values spaced evenly on a logarithmic scale from 0.0001 to 10,000.
 - *Regression tree:* maximum depths of 3, 5, 8, 12, or no depth limit, combined with minimum leaf sizes of 2, 5, 10, or 20 observations.
@@ -213,9 +213,9 @@ These grids provide the same number of candidate evaluations for each tunable mo
 
 All models will use the same eight source predictors and untransformed strength values. Polynomial terms will be fixed before tuning. For the regression models, input columns will be standardized using means and standard deviations calculated from each training fold. The corresponding validation fold will receive the same transformation. Polynomial terms will be standardized after expansion. Trees will use unscaled inputs because their split rules do not require standardization. After tuning, scaling parameters will be recalculated from the full training set and applied unchanged to the test set.
 
-Mean validation root mean squared error (RMSE) will determine the settings for each model and the preferred model. All four models will then be fitted to the full training set and evaluated once on the same test observations. Test RMSE, mean absolute error (MAE), and $R^2$ will be reported, with RMSE and MAE expressed in MPa. Predicted-versus-observed and residual plots will show where errors occur. Test results will not guide further tuning or changes to preprocessing.
+Mean root mean squared error (RMSE) across the five predefined mixture-grouped validation folds determines hyperparameter selection. Ordinary random cross-validation is used only as a supplementary diagnostic, not for model selection. After selection, each tuned model is refitted to the full training set and evaluated once on the same held-out test observations. Test RMSE, mean absolute error (MAE), and $R^2$ will be reported, with RMSE and MAE expressed in MPa. Predicted-versus-observed and residual plots will show where errors occur. Test results will not guide further tuning or changes to preprocessing.
 
-SHapley Additive exPlanations (SHAP) will explain RF predictions @lundberg2017, with approximate Shapley values calculated through ShapML.jl. Training observations will provide the reference data, and explanations will cover test observations after model settings are fixed. Mean absolute SHAP values will rank predictor contributions. A summary plot and dependence plots for the leading predictors will show contributions to higher or lower predicted strength relative to the reference prediction. These results explain model behavior and do not establish causal effects. Correlated ingredients may affect how contributions are shared.
+SHapley Additive exPlanations (SHAP) were used to interpret RF predictions @lundberg2017, with approximate Shapley values calculated in Julia using ShapML.jl. Training observations provided the reference data, and explanations covered held-out test observations after the RF hyperparameters were selected. Mean absolute SHAP values will rank predictor contributions. A summary plot and dependence plots for the leading predictors will show contributions to higher or lower predicted strength relative to the reference prediction. These results explain model behavior and do not establish causal effects. Correlated ingredients may affect how contributions are shared.
 
 The model's predictive ability will be limited by the range and distribution of the available data. Predictions for mix proportions or curing ages that are poorly represented in the dataset may be less reliable. The interpretation of the model's performance should be limited to dataset.
 
@@ -309,90 +309,68 @@ Fig. 9 shows the model predictions and residuals on the test set. In Fig. 9 (a),
   caption: [Test-set diagnostics for polynomial regression with ridge regularization. (a) Predicted versus observed strength. (b) Residuals by specimen age. (c) Residuals versus predicted strength.],
 ) <fig:ridge-diagnostics>
 
-Overall, polynomial ridge regression improves the prediction compared with the original linear model and captures some nonlinear relationships among the concrete ingredients and age. However, its errors are still large for some older and high-strength specimens. Therefore, it may be useful for preliminary comparisons of mixtures within the range represented by the dataset, but it is not accurate enough to confirm that a concrete mixture meets a required design strength without laboratory testing. Among the regression models completed so far, the selected MLR has the lowest test error. The final comparison should also consider the regression tree and random forest results. Reading guides for @fig:ridge-tuning and @fig:ridge-diagnostics are provided as text files with the same names in the `modeling/ridge/figures/` folder.
+Overall, polynomial ridge regression improves the prediction compared with the original linear model and captures some nonlinear relationships among the concrete ingredients and age. However, its errors are still large for some older and high-strength specimens. Therefore, it may be useful for preliminary comparisons of mixtures within the range represented by the dataset, but it is not accurate enough to confirm that a concrete mixture meets a required design strength without laboratory testing. Among the two evaluated parametric regression approaches, the selected MLR has the lower test error. The RF results are presented below; the regression tree can be added to the full comparison once its results are available. Reading guides for @fig:ridge-tuning and @fig:ridge-diagnostics are provided as text files with the same names in the `modeling/ridge/figures/` folder.
 
+== *Random Forest and SHAP Analysis*
 
+Random forest (RF) regression was used to model nonlinear relationships among the seven concrete ingredients, specimen age, and compressive strength @breiman2001. The model was implemented in Julia with DecisionTree.jl and used the eight original predictors without scaling or additional feature transformations. To maintain comparability, the same 804 training observations, 201 held-out test observations, and five mixture-grouped validation folds were taken directly from `data/concrete_split.csv`. Each of 20 predefined combinations of maximum depth (10 or unrestricted), minimum leaf size (2 or 5), and candidate predictors per split (2, 3, 4, 6, or 8) was evaluated with 500 trees. Hyperparameters were selected solely by the *lowest mean RMSE across the five mixture-grouped validation folds*, with the same mixture excluded from the corresponding training fold. Ordinary random five-fold cross-validation was computed separately as a diagnostic and did not influence model selection.
 
-== *Regression Trees*
-The regression tree model was developed using Julia's DecisionTree.jl package.Regression trees perform recursive partitioning of observations based on the values of the independent variables, to minimize differences of compressive strength within each resulting group. Each terminal leaf node generates a predicted value based on the average strength of its training observations.
+@fig:rf-tuning compares these two validation strategies. The minimum grouped validation RMSE was *6.34 ± 0.89 MPa* (mean ± standard deviation across folds), obtained with unrestricted maximum depth, a minimum leaf size of two, and four candidate predictors per split. For this selected configuration, ordinary random cross-validation yielded *5.65 ± 0.74 MPa*. Its lower error is consistent with the possibility that ordinary random folds contain observations at different ages from mixtures also represented in training, thereby providing an easier prediction task. Accordingly, the grouped estimate better reflects the stated goal of predicting strength for unseen mixture recipes; the random-fold result was not used to choose hyperparameters.
 
-To control the model’s complexity, two hyperparameters were adjusted: the maximum tree depth and the minimum number of samples per leaf node.The maximum depth limits the number of splits, while the minimum leaf node size determines the minimum number of observations in each terminal node. A larger maximum depth and a smaller leaf node size allow the model to capture more complex relationships, but may lead to overfitting.
-
-Five optional values are considered for the maximum tree depth (3, 5, 8, 12, and unlimited), while four possible values are considered for the minimum number of samples per leaf node (2, 5, 10, and 20,in total of 20 different hyperparameter combinations.Each combination was evaluated using 5-folds cross validation, and the combination with the lowest RMSE is selected for the final model.
 #figure(
-  image(
-    "modeling/rt/rt_rmse_heatmap.png",
-    width: 100%,
-  ),
-  caption: [
-    Mean validation RMSE across 20 regression tree
-    hyperparameter combinations using five-fold
-    cross-validation.
-  ],
-) <fig:rtree-rmse>
+  image("modeling/rf/figures/fig_rf_tuning.png", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [Random forest hyperparameter evaluation. (a) Mean RMSE ± one standard deviation across the five *mixture-grouped* validation folds, used for model selection. (b) Ordinary random five-fold cross-validation, shown as a supplementary diagnostic only. Each configuration contains 500 trees; the star identifies the configuration selected from panel (a).],
+) <fig:rf-tuning>
 
-As in @fig:rtree-rmse, with the maximum tree depth increased from 3 to 12, RMSE generally decreased, which also shows that deeper tree structures are more effective at modeling the complex relationships. A smaller minimum leaf node size also help to lower errors, especially with deeper tree structures.However, increasing the maximum tree depth over 12 did not make further improvements.Among the 20 hyperparameter combinations, the combination with a maximum depth of 12 and a minimum leaf node size of 2 achieved the lowest RMSE of 8.7 MPa.And the final regression tree using this combination was trained with full training set, followed by evaluation on the test set.
+The selected RF model was refitted using all 804 training observations and evaluated once on the 201 held-out test observations. It achieved an RMSE of *5.23 MPa*, an MAE of *3.91 MPa*, and an $R^2$ of *0.889* (@tab:rf-comparison). Its test RMSE was approximately 23% lower than that of the selected multiple linear regression (MLR) model (6.77 MPa) and approximately 31% lower than that of polynomial ridge regression (7.62 MPa). The lower test error supports the usefulness of flexible nonlinear predictions for this dataset, although the feature sets differ between the selected MLR and RF models and the comparison reflects only this particular held-out split.
 
 #figure(
   table(
-    columns: (1fr, 1fr),
-    align: (left, center),
-    stroke: none,
-    inset: (x: 8pt, y: 5pt),
-
-    table.hline(stroke: 0.8pt),
-    [*Metric*], [*Value*],
-    table.hline(stroke: 0.5pt),
-
-    [RMSE (MPa)], [6.756],
-    [MAE (MPa)], [4.917],
-    [$R^2$], [0.815],
-
-    table.hline(stroke: 0.8pt),
+    columns: (2.5fr, 1fr, 1fr, 0.8fr),
+    inset: 4pt,
+    align: (left, center, center, center),
+    table.header([*Model*], [*Test RMSE*], [*Test MAE*], [*Test $R^2$*]),
+    [Selected MLR (ln(age) + w/b)], [6.77], [5.25], [0.81],
+    [Polynomial ridge], [7.62], [5.88], [0.765],
+    [*Random forest*], [*5.23*], [*3.91*], [*0.889*],
   ),
-  caption: [Regression tree performance on the testing set.],
-) <tab:rtree-performance>
-The predictive performance of the regression tree model was evaluated using RMSE, MAE, and R². As shown in @tab:rtree-performance, the model’s RMSE is 6.756 MPa, the MAE is 4.917 MPa, and R² is 0.815. 
+  caption: [Held-out test performance of the completed models on the same 201 observations. RMSE and MAE are expressed in MPa; the regression tree will be added to the final four-model comparison.],
+) <tab:rf-comparison>
 
+@fig:rf-diagnostics summarizes the RF test predictions and residuals. Predictions generally track the measured strengths, while errors remain larger for some high-strength specimens. For the 14 specimens with measured strength above 60 MPa, the RMSE increased to *10.07 MPa*, with a mean observed-minus-predicted residual of *+7.18 MPa*, indicating underprediction. In contrast, the 14 specimens tested at ages of at least 180 days had an RMSE of *4.91 MPa* and mean residual of *+0.64 MPa*, substantially smaller in magnitude than the long-age bias reported for the selected MLR model. Because these subgroups contain few observations, the numerical differences should not be generalized without further validation. Despite its improved overall accuracy, the RF model cannot replace laboratory strength testing when compliance with a specified design strength must be established.
 
 #figure(
-  placement: top,
+  image("modeling/rf/figures/fig_rf_test_diagnostics.png", width: 100%),
+  placement: auto,
   scope: "parent",
-  [
-    #image("modeling/rt/rt_predOb.png", width: 100%)
+  caption: [Random forest performance on the held-out test set (n = 201). (a) Predicted versus observed compressive strength, with the 1:1 line and a ±10 MPa band. (b) Observed-minus-predicted residuals by specimen age, with medians. (c) Residuals versus predicted strength, with dashed lines at ±10 MPa.],
+) <fig:rf-diagnostics>
 
-    #v(3pt)
+To interpret the fitted RF model, approximate SHapley Additive exPlanations (SHAP) were calculated in Julia using ShapML.jl @lundberg2017. A random sample of 100 training observations provided the reference distribution, and stochastic Shapley estimates were calculated for all 201 test observations, using 60 samples per feature. Mean absolute SHAP values were used to summarize global importance. The leading predictors were age (*31.7%* of summed mean absolute SHAP importance), cement (*27.0%*), and water (*14.0%*), followed by superplasticizer (*8.7%*) and slag (*7.9%*) (@fig:rf-importance). These percentages represent *relative contributions to the fitted model's predictions*, rather than proportions of explained variance or physical causal effects.
 
-    #grid(
-      columns: (1fr, 1fr, 1fr),
-      align: auto,
-      [a],
-      [b],
-      [c],
-    )
-  ],
-  caption: [
-    Regression tree performance on the testing set:
-    (a) observed versus predicted compressive strength;
-    (b) residuals versus specimen age;
-    and (c) residuals versus predicted compressive strength.
-  ],
-) <fig:rtree-performance>
-
-@fig:rtree-performance(a) shows that most of the predicted compressive strengths are distributed near the 1:1 reference line, indicating consistency between the model’s predictions and the observed values. Most of the predicted values fall within an error band of ±10 MPa. However, some observed values differ significantly from the reference line, which means that the model’s predictive accuracy is lower for certain concrete mix designs.In @fig:rtree-performance(b), at different curing ages, the residuals are distributed on both sides of the zero-residual line. It can be told that the model does not consistently overestimate or underestimate the compressive strength across all curing ages.However, the Lowess trend gradually decreases as specimen age increases, which means it turns from underestimate to overestimate compressive strength when curing ages increase.Similarly, @fig:rtree-performance(c) shows that at lower and medium predicted strengths, the residuals are generally concentrated near zero, and at higher predicted strengths, the LOWESS trend shows an obvious downward slope. This suggests that the model may tend to overestimate compressive strength in higher predicted strength. 
-
-To assess the relative importance of the eight input variables in the regression tree model, each feature was randomly permuted 30 times while keeping the remaining features constant. For each permutation, calculate the change in training RMSE relative to the performance of the original model. And the results are included in @fig:rt-feature-importance.
 #figure(
-  image("modeling/rt/rt_feature_importance.png", width: 100%),
-  caption: [
-    Permutation feature importance of the regression tree model.
-    Points represent the mean change in training RMSE across
-    30 random permutations.
-  ],
-) <fig:rt-feature-importance>
-The cement content shows the highest feature importance, the average increase in RMSE is qround 14 MPa,followed by specimen age (12.7 MPa), water content (9.5 MPa), and slag content (7.3 MPa). The importance scores for the remaining four variables—fine aggregate, fly ash, coarse aggregate, and superplasticizer—are relatively smaller, ranging from 2 to 3 MPa. Shorter error bars may indicate that the importance estimates vary little across multiple permutations. These results suggest that the regression tree mainly depends on cement content, curing age, moisture content, and slag content to predict concrete compressive strength. However, it is important to note that the feature importance measures the model’s dependence on each feature, rather than the impact of these features on concrete strength.
+  image("modeling/rf/figures/fig_rf_shap_importance.png", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [Global random forest feature importance based on mean absolute approximate SHAP values across the 201 test observations. Values are normalized to sum to 100%.],
+) <fig:rf-importance>
 
-This regression tree model, with eight input variables, performed well in predicting the compressive strength of concrete. By optimizing hyperparameters（maximun depth and minimum leaf node size）, the RMSE in the 5-folds cross-validation decreased from approximately 11.60 MPa for a shallow tree (maximum depth of 3 and minimum leaf node size of 2) to 8.70 MPa(maximum depth of 12 and minimum leaf node size of 2),reducing it by approximately 25%.
-On the testing set, the final model had RMSE of 6.756 MPa, MAE of 4.917 MPa, and R² of 0.815, that means the model fits approximately 81.5% of the observed variation in compressive strength.On the testing set, the final model had RMSE of 6.756 MPa, MAE of 4.917 MPa, and R² of 0.815, that means the model fits approximately 81.5% of the observed variation in compressive strength.
+The SHAP summary (@fig:rf-summary) and dependence plots (@fig:rf-dependence) provide information about the direction and nonlinearity of these associations. Larger ages and cement contents generally contributed positively to predicted strength, whereas greater water content generally contributed negatively. Age contributions increased markedly at early curing ages and changed less at later ages, consistent with nonlinear strength development. Positive SHAP contributions were also associated with greater slag content in portions of the observed data. However, dependence patterns need not be monotonic for every observation, and the apparent predictor effects may partly reflect correlations and interactions among ingredients. Because ShapML.jl produces sampling-based approximations with a finite training reference sample, these SHAP values should be interpreted as estimates of the model's behavior, not exact or causal decompositions of concrete strength.
 
-While having such performance, there are still some limitations.The MAE of approximately 4.92 MPa indicates that prediction errors is still big; residual analysis shows a slight tendency to overestimate compressive strength at longer curing ages and higher predicted strength levels. Moreover, the predictions generated by a single regression tree will exhibit piecewise constant distribution, limits its ability to smoothly capture changes in compressive strength as input variables change.
+#figure(
+  image("modeling/rf/figures/fig_rf_shap_summary.png", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [SHAP summary for the 201 held-out test observations. Each point represents one observation; its horizontal position indicates the estimated contribution to predicted compressive strength, while color represents the corresponding predictor value.],
+) <fig:rf-summary>
+
+#figure(
+  image("modeling/rf/figures/fig_rf_shap_dependence.png", width: 100%),
+  placement: auto,
+  scope: "parent",
+  caption: [SHAP dependence plots for (a) specimen age, (b) cement, (c) water, and (d) slag. Vertical coordinates are estimated contributions to predicted strength (MPa); colors indicate the corresponding secondary predictor shown by each color scale.],
+) <fig:rf-dependence>
+
+Overall, RF outperformed the selected MLR and polynomial ridge models on the shared held-out test set and captured important nonlinear associations. Nonetheless, systematic underprediction of strengths above 60 MPa and the observational nature of the dataset limit its use for strength-based acceptance decisions. Validation on independent concrete mixture datasets, particularly with broader coverage of high-strength specimens, would be required before practical deployment. The tuning results, test predictions, subgroup analyses, and approximate SHAP values are retained in `modeling/rf/outputs/`, with the corresponding figures in `modeling/rf/figures/`.
