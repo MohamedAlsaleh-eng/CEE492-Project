@@ -458,3 +458,30 @@ The SHAP summary (@fig:rf-summary) and dependence plots (@fig:rf-dependence) pro
 ) <fig:rf-dependence>
 
 Overall, RF outperformed the selected MLR and polynomial ridge models on the shared held-out test set and captured important nonlinear associations. Nonetheless, systematic underprediction of strengths above 60 MPa and the observational nature of the dataset limit its use for strength-based acceptance decisions. Validation on independent concrete mixture datasets, particularly with broader coverage of high-strength specimens, would be required before practical deployment. The corresponding RF and SHAP figures are provided in `figures/rf/`; the numerical outputs can be archived separately for reproducibility.
+
+== *Comparison of Models*
+
+#figure(
+  table(
+    columns: (2.5fr, 1fr, 1fr, 0.8fr),
+    inset: 4pt,
+    align: (left, center, center, center),
+
+    table.header(
+      [*Model*],
+      [*RMSE*],
+      [*MAE*],
+      [*$R^2$*],
+    ),
+
+    [MLR (Selected)], [6.77], [5.25], [0.810],
+    [Polynomial], [7.62], [5.88], [0.765],
+    [Regression Tree], [6.756], [4.917], [0.815],
+    [Random Forest], [5.23], [3.91], [0.889],
+  ),
+  caption: [
+    Comparison of four regression models on the
+    testing set (n = 201).
+    RMSE and MAE are expressed in MPa.
+  ],
+) <tab:all-comparison>
