@@ -1,0 +1,45 @@
+term,coefficient_standardized
+cement,3.0146
+slag,1.187281
+flyash,-0.259433
+water,-0.558733
+sp,0.633683
+coarse,-0.100968
+fine,0.243743
+age,3.291139
+cement^2,0.306867
+cement slag,0.773964
+cement flyash,1.367088
+cement water,-0.513618
+cement sp,-0.64522
+cement coarse,4.366211
+cement fine,3.42282
+cement age,1.033682
+slag^2,-2.32855
+slag flyash,0.102683
+slag water,2.373483
+slag sp,0.889463
+slag coarse,-0.430668
+slag fine,3.516396
+slag age,2.399596
+flyash^2,-1.416442
+flyash water,-0.072217
+flyash sp,-1.203891
+flyash coarse,0.623268
+flyash fine,1.989161
+flyash age,1.626174
+water^2,0.333478
+water sp,0.709331
+water coarse,-2.916173
+water fine,-0.80861
+water age,1.799684
+sp^2,-4.234533
+sp coarse,1.605049
+sp fine,1.708664
+sp age,2.073325
+coarse^2,0.078134
+coarse fine,0.887388
+coarse age,2.988773
+fine^2,-2.004062
+fine age,5.493444
+age^2,-10.423161
