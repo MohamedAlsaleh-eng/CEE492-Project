@@ -1,0 +1,50 @@
+Figure - Test-set diagnostics of polynomial regression with ridge regularization
+File: ridge_diagnostics.png (vector version ridge_diagnostics.pdf is produced locally; *.pdf may be git-ignored)
+Code: modeling/ridge/ridge.py
+
+All three panels show the 201 held-out test specimens. The test mixtures were
+not included in training. Blue dots show individual predictions. Residual =
+observed - predicted strength, so a NEGATIVE residual means that the model
+OVERPREDICTED strength, and a POSITIVE residual means it UNDERPREDICTED.
+
+PANEL (a) - predicted vs observed strength
+- x-axis: measured concrete compressive strength (MPa).
+- y-axis: model-predicted compressive strength (MPa).
+- Grey diagonal: perfect predictions, where predicted = observed.
+- Light grey band: predictions within +/-10 MPa of the observed value.
+- The text gives the test sample size (201) and test RMSE (7.62 MPa).
+
+What to look for: many points are close to the diagonal, but errors remain,
+particularly at higher strengths. The polynomial ridge model performs better
+than the original eight-variable MLR (10.39 MPa RMSE), but not as well as the
+selected MLR with ln(age) and water-to-binder ratio (6.77 MPa RMSE).
+
+PANEL (b) - residual vs specimen age
+- x-axis: specimen age in days on a logarithmic scale
+- y-axis: residual, observed minus predicted, in MPa
+- Horizontal grey line: zero residual (no prediction error)
+- Black line with square markers: median residual for the plotted age groups.
+
+What to look for: errors vary with age. The median residual is negative for
+some younger specimens, becomes positive around intermediate ages, and turns
+negative again for older specimens. Among the 14 test specimens aged 180 days
+or more, RMSE is 10.63 MPa and the average residual is -2.93 MPa, meaning the
+model tends to overpredict these older specimens.
+
+PANEL (c) - residual vs predicted strength
+- x-axis: predicted strength (MPa).
+- y-axis: residual, observed minus predicted, in MPa.
+- Black curve: LOWESS smoothed trend of the residuals.
+- Dashed horizontal lines: residuals of +10 and -10 MPa (not confidence limits).
+
+What to look for: the LOWESS trend is not flat at zero, suggesting some
+remaining systematic errors. The spread of residuals also varies with
+predicted strength. For the 14 test specimens with measured strength above
+60 MPa, RMSE is 11.13 MPa and average residual is +3.67 MPa, indicating
+underprediction on average.
+
+CAUTIONS
+- The older-age and high-strength results are based on only 14 test specimens
+  in each subgroup, so they should be interpreted carefully.
+- The plots describe model performance on this test split; they do not show
+  that the model is accurate enough to verify a required design strength.

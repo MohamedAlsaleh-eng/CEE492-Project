@@ -1,0 +1,38 @@
+Figure - Selection of the ridge penalty for polynomial regression
+File: ridge_tuning.png (vector version ridge_tuning.pdf is produced locally; *.pdf may be git-ignored)
+Code: modeling/ridge/ridge.py
+
+The model uses the eight original predictors, their squared terms, and pairwise
+interactions (44 terms). The same five grouped validation folds from
+concrete_split.csv are used for each of the 20 ridge penalties. The test set is
+not used to choose the penalty.
+
+PANEL (a) - which ridge penalty predicts best
+- x-axis: ridge penalty lambda, shown on a logarithmic scale from 0.0001 to 10,000
+- y-axis: mean validation RMSE across the five grouped folds, in MPa; lower is better
+- Blue dots and line: average validation RMSE for each tested penalty.
+- Light blue band: +/- one standard deviation across the five folds.
+- Black diamond and vertical dashed line: selected penalty, lambda = 11.29.
+  This is the setting with the lowest mean validation RMSE (8.42 MPa).
+
+What to look for: penalties close to zero give similar errors. Moderate
+regularization gives a small improvement, while very large penalties increase
+RMSE because they restrict the model too much. The minimum is not sharply
+separated from nearby settings, so the exact penalty should not be over interpreted.
+
+PANEL (b) - how consistent the selected model is across folds
+- x-axis: validation fold (1 through 5).
+- y-axis: validation RMSE, in MPa.
+- Each blue bar: RMSE on one held-out grouped fold using the selected penalty.
+- Black horizontal line: mean validation RMSE (8.42 MPa).
+
+What to look for: performance differs slightly between the folds. Fold 5 has
+the highest error, showing that some held-out mixtures are harder to predict.
+The five-fold standard deviation is about 0.55 MPa.
+
+CAUTIONS
+- Scaling is calculated from the training portion of each fold, after
+  polynomial expansion, and is applied unchanged to the corresponding
+  validation fold. This avoids using validation data during fitting.
+- Ridge reduces the size of coefficients but does not guarantee that a
+  polynomial relationship describes concrete strength correctly.
